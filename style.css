@@ -149,22 +149,36 @@ body {
     font-family: 'Courier New', Courier, monospace; font-size: 1.2rem; line-height: 1.6;
 }
 .page-content.active { opacity: 1; transform: translateY(0); pointer-events: auto; position: relative; }
-
 /* --- Projects Grid (NEW) --- */
 .projects-grid {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap; /* Forces them to stay in an intermeshed line */
     justify-content: center;
-    gap: 30px;
-    padding: 20px 0 100px 0;
+    align-items: flex-start;
+    padding: 20px 0 160px 0; /* Extra bottom padding for the staggered row */
 }
 
 .proj-hex-wrapper {
     width: 320px;
     height: 277px; 
-    filter: drop-shadow(0 0 calc(2px + 20px * var(--glow, 0)) rgba(var(--rgb), calc(0.3 + 0.7 * var(--glow, 0))));
-    transition: transform 0.3s ease;
+    /* The Honeycomb interlocking math */
+    margin-left: -80px; 
+    /* Match the menu's exact drop-shadow glitch effect */
+    filter: drop-shadow(2px 2px 0px var(--shadow-1)) 
+            drop-shadow(-2px -2px 0px var(--shadow-2)) 
+            drop-shadow(0 0 calc(2px + 20px * var(--glow, 0)) rgba(var(--rgb), calc(0.3 + 0.7 * var(--glow, 0))));
+    transition: opacity 0.4s ease, transform 0.4s ease;
     cursor: pointer;
+}
+
+/* Ensure the first item doesn't get pulled out of bounds */
+.proj-hex-wrapper:first-child {
+    margin-left: 0;
+}
+
+/* Stagger every second hexagon downward to interlock perfectly */
+.proj-hex-wrapper:nth-child(even) {
+    margin-top: 138px; /* Exactly half of the 277px height */
 }
 
 .proj-hex {
@@ -172,24 +186,23 @@ body {
     width: 100%;
     height: 100%;
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    background-color: rgba(var(--rgb), calc(0.05 + 0.15 * var(--glow, 0)));
-    border: 2px solid rgba(var(--rgb), 0.5); 
+    /* Match the menu's exact background styling */
+    background-color: rgba(var(--rgb), calc(0.15 + 0.35 * var(--glow, 0)));
     backdrop-filter: blur(4px);
-    transition: transform 0.2s ease, background-color 0.2s ease;
+    transition: transform 0.15s ease;
     padding: 10px; 
 }
 
 .proj-hex::after {
     content: " "; position: absolute; inset: 0; pointer-events: none; animation: screenFlicker 0.15s infinite; 
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%); background-size: 100% 4px;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%); background-size: 100% 4px;
     z-index: 0;
 }
 
+/* Scale up the inner hex on hover just like the menu does */
 .proj-hex:hover {
     transform: scale(1.05);
-    background-color: rgba(var(--rgb), 0.2); 
 }
-
 /* CSS Text Wrapping Magic */
 .shape-left {
     float: left; width: 25%; height: 100%;
