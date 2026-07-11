@@ -14,7 +14,6 @@
 
         body {
             background-color: #1a1a24;
-            /* Subtle 80s retro grid background */
             background-image: 
                 linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
@@ -29,17 +28,13 @@
             padding-top: 120px; 
         }
 
-        /* 80s Retro Racing Title */
         h1 {
             font-size: 5rem;
             font-style: italic;
             font-weight: 900;
             text-transform: uppercase;
             color: #ffffff;
-            /* Stereoscopic neon shadow effect */
-            text-shadow: 
-                4px 4px 0px #ff0055, 
-                -4px -4px 0px #00ffff;
+            text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff;
             letter-spacing: 5px;
         }
 
@@ -52,109 +47,109 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* Large padding area prevents the menu from closing if your mouse slips */
             padding: 0 50px 200px 0; 
         }
 
-        /* Base Hexagon Shape (Flat Top/Bottom) */
+        /* 
+           The Wrapper handles the drop-shadow. 
+           We have to separate this from the clip-path, otherwise the clip-path 
+           will cut the shadow off entirely.
+        */
+        .hex-wrapper {
+            width: 100px;
+            height: 87px; /* Mathematically perfect 86.6% of width */
+            margin-bottom: 5px; /* Clean 5px gap between flat edges */
+            text-decoration: none;
+            
+            /* The --glow variable is driven by JavaScript. 
+               It scales the shadow radius and opacity based on mouse distance. */
+            filter: drop-shadow(0 0 calc(2px + 20px * var(--glow, 0)) rgba(var(--rgb), calc(0.3 + 0.7 * var(--glow, 0))));
+            
+            /* Transition only transforms and opacity to avoid JS lag */
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        /* The actual hexagon shape */
         .hex {
-            width: 90px;
-            height: 78px; /* Slightly shorter than width to make a perfect hexagon */
+            width: 100%;
+            height: 100%;
             clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            
+            /* Semi-transparent base that gets slightly more opaque as it glows */
+            background-color: rgba(var(--rgb), calc(0.15 + 0.35 * var(--glow, 0)));
+            backdrop-filter: blur(4px); /* Frosts the grid behind it */
+            
             display: flex;
             justify-content: center;
             align-items: center;
-            text-decoration: none;
-            cursor: pointer;
-            z-index: 10;
-            transition: transform 0.2s ease, filter 0.2s ease;
+            transition: transform 0.15s ease;
         }
 
         .hex span {
-            color: #111111;
-            font-size: 0.85rem;
+            color: #ffffff;
+            /* Adds a hard glow to the text to ensure it remains readable */
+            text-shadow: 0 0 5px rgba(var(--rgb), 1);
+            font-size: 0.9rem;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 1px;
-            pointer-events: none; /* Prevents text from interfering with hover */
+            pointer-events: none; 
         }
 
-        /* Main Menu Button */
-        .main-hex {
-            background-color: #00ffff; /* Neon Cyan */
-            z-index: 20; 
+        .hex:hover {
+            transform: scale(1.05); /* Slight pop effect when directly hovering */
         }
 
         /* Sub-menu Container */
         .sub-menu {
             display: flex;
             flex-direction: column;
-            /* Negative margin pulls them up to interlock like a honeycomb */
-            margin-top: -10px; 
         }
 
-        .sub-hex {
-            margin-bottom: -10px; /* Interlock with siblings */
+        /* Sub-menu hiding logic */
+        .sub-wrapper {
             opacity: 0;
-            /* Start them shifted slightly up */
             transform: translateY(-20px);
             pointer-events: none; 
         }
 
-        /* 80s Color Palette & Reverse Delays (for fading out) */
-        .hex-1 { 
-            background-color: #ff0055; /* Hot Pink */
-            transition: all 0.3s ease 0.2s; 
-        }
-        .hex-2 { 
-            background-color: #ffff00; /* Racing Yellow */
-            transition: all 0.3s ease 0.1s;
-        }
-        .hex-3 { 
-            background-color: #ff5500; /* Electric Orange */
-            transition: all 0.3s ease 0s;
-        }
-
-        /* --- Hover Animations --- */
+        /* Staggered Delays for closing */
+        .h1 { transition-delay: 0.2s; }
+        .h2 { transition-delay: 0.1s; }
+        .h3 { transition-delay: 0s; }
 
         /* Trigger cascade when hovering the wrapper */
-        .nav-wrapper:hover .sub-hex {
+        .nav-wrapper:hover .sub-wrapper {
             opacity: 1;
             transform: translateY(0);
             pointer-events: auto;
         }
 
-        /* Forward Delays (Top-down fade in on hover) */
-        .nav-wrapper:hover .hex-1 { transition-delay: 0.1s; }
-        .nav-wrapper:hover .hex-2 { transition-delay: 0.2s; }
-        .nav-wrapper:hover .hex-3 { transition-delay: 0.3s; }
+        /* Staggered Delays for opening */
+        .nav-wrapper:hover .h1 { transition-delay: 0.1s; }
+        .nav-wrapper:hover .h2 { transition-delay: 0.2s; }
+        .nav-wrapper:hover .h3 { transition-delay: 0.3s; }
 
-        /* Individual Hexagon Interaction */
-        .sub-hex:hover, .main-hex:hover {
-            transform: scale(1.05); /* Slight pop out instead of rotating */
-            filter: brightness(1.2);
-            z-index: 30; 
-        }
     </style>
 </head>
 <body>
 
     <!-- Top Left Interactive Menu -->
     <nav class="nav-wrapper">
-        <div class="hex main-hex">
-            <span>Menu</span>
+        <!-- We use inline styles to assign RGB values for the glow variables -->
+        <div class="hex-wrapper main-wrapper" style="--rgb: 0, 255, 255;">
+            <div class="hex"><span>Menu</span></div>
         </div>
         
         <div class="sub-menu">
-            <!-- Using short text so it fits beautifully inside the shape -->
-            <a href="#projects" class="hex sub-hex hex-1">
-                <span>Proj</span>
+            <a href="#projects" class="hex-wrapper sub-wrapper h1" style="--rgb: 255, 0, 85;">
+                <div class="hex"><span>Proj</span></div>
             </a>
-            <a href="#about" class="hex sub-hex hex-2">
-                <span>Abt</span>
+            <a href="#about" class="hex-wrapper sub-wrapper h2" style="--rgb: 255, 255, 0;">
+                <div class="hex"><span>Abt</span></div>
             </a>
-            <a href="#contact" class="hex sub-hex hex-3">
-                <span>Cont</span>
+            <a href="#contact" class="hex-wrapper sub-wrapper h3" style="--rgb: 255, 85, 0;">
+                <div class="hex"><span>Cont</span></div>
             </a>
         </div>
     </nav>
@@ -164,5 +159,35 @@
         <h1>Kanso Denki</h1>
     </header>
 
+    <!-- JavaScript for Proximity Glow -->
+    <script>
+        document.addEventListener('mousemove', (e) => {
+            const wrappers = document.querySelectorAll('.hex-wrapper');
+            
+            wrappers.forEach(wrapper => {
+                // Find the center coordinates of each hexagon
+                const rect = wrapper.getBoundingClientRect();
+                const hexX = rect.left + rect.width / 2;
+                const hexY = rect.top + rect.height / 2;
+                
+                // Use Pythagorean theorem to find distance from mouse to center
+                const distX = e.clientX - hexX;
+                const distY = e.clientY - hexY;
+                const distance = Math.sqrt(distX * distX + distY * distY);
+                
+                // Max radius (in pixels) for the glow to begin
+                const maxDistance = 250; 
+                
+                // Calculate intensity (1 when touching, 0 when outside maxDistance)
+                let intensity = 0;
+                if (distance < maxDistance) {
+                    intensity = 1 - (distance / maxDistance);
+                }
+                
+                // Push the intensity value back to CSS
+                wrapper.style.setProperty('--glow', intensity);
+            });
+        });
+    </script>
 </body>
 </html>
