@@ -1,21 +1,34 @@
+let isGlowRunning = false;
+
 document.addEventListener('mousemove', (e) => {
-    const wrappers = document.querySelectorAll('.hex-wrapper, .proj-hex-wrapper');
+    // If the browser is currently drawing a frame, skip the math to prevent lag
+    if (isGlowRunning) return;
+
+    isGlowRunning = true;
     
-    wrappers.forEach(wrapper => {
-        const rect = wrapper.getBoundingClientRect();
-        const hexX = rect.left + rect.width / 2;
-        const hexY = rect.top + rect.height / 2;
+    // Wait for the browser to be ready for the next visual update
+    window.requestAnimationFrame(() => {
+        const wrappers = document.querySelectorAll('.hex-wrapper, .proj-hex-wrapper');
         
-        const distX = e.clientX - hexX;
-        const distY = e.clientY - hexY;
-        const distance = Math.sqrt(distX * distX + distY * distY);
+        wrappers.forEach(wrapper => {
+            const rect = wrapper.getBoundingClientRect();
+            const hexX = rect.left + rect.width / 2;
+            const hexY = rect.top + rect.height / 2;
+            
+            const distX = e.clientX - hexX;
+            const distY = e.clientY - hexY;
+            const distance = Math.sqrt(distX * distX + distY * distY);
+            
+            const maxDistance = 300; 
+            let intensity = 0;
+            if (distance < maxDistance) {
+                intensity = 1 - (distance / maxDistance);
+            }
+            wrapper.style.setProperty('--glow', intensity);
+        });
         
-        const maxDistance = 300; 
-        let intensity = 0;
-        if (distance < maxDistance) {
-            intensity = 1 - (distance / maxDistance);
-        }
-        wrapper.style.setProperty('--glow', intensity);
+        // Reset the lock so it can calculate the next frame
+        isGlowRunning = false;
     });
 });
 
