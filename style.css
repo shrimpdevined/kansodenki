@@ -289,19 +289,16 @@ body {
 .hex-wrapper, .proj-hex-wrapper {
     filter: drop-shadow(2px 2px 0px var(--shadow-1)) drop-shadow(-2px -2px 0px var(--shadow-2)) !important;
 }
-
 /* 2. Create a dedicated, bulletproof glow layer behind the hexagons. */
 .hex-wrapper::before, .proj-hex-wrapper::before {
     content: "";
     position: absolute;
-    /* Expand the box outward so the light has room to radiate */
-    top: -30%; left: -30%; right: -30%; bottom: -30%;
-    /* Make the light source perfectly round */
-    border-radius: 50%;
-    /* Create a smooth fade from the center outward, eliminating the solid look */
-    background: radial-gradient(circle, rgba(var(--rgb), 0.6) 0%, rgba(var(--rgb), 0) 65%);
-    /* Scale transparency based on mouse proximity */
-    opacity: calc(0.1 + 0.9 * var(--glow, 0));
+    /* Expand the invisible box massively so the light never hits a hard edge */
+    inset: -60%; 
+    /* circle closest-side ensures it stays a perfect circle and fades to 0 exactly at the edges */
+    background: radial-gradient(circle closest-side, rgba(var(--rgb), 0.25) 0%, rgba(var(--rgb), 0) 100%);
+    /* Lower the overall intensity so it feels like a soft ambient light */
+    opacity: calc(0.0 + 0.75 * var(--glow, 0));
     z-index: -1;
     pointer-events: none;
     will-change: opacity;
