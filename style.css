@@ -294,12 +294,12 @@ body {
 .hex-wrapper::before, .proj-hex-wrapper::before {
     content: "";
     position: absolute;
-    /* Shrink the core of the glow slightly so it sits behind the hex */
-    top: 15%; left: 15%; right: 15%; bottom: 15%;
-    /* Create a bright core using the RGB variable */
-    background-color: rgb(var(--rgb));
-    /* Let the blur bleed outward freely (NO clip-path here!) */
-    filter: blur(25px);
+    /* Expand the box outward so the light has room to radiate */
+    top: -30%; left: -30%; right: -30%; bottom: -30%;
+    /* Make the light source perfectly round */
+    border-radius: 50%;
+    /* Create a smooth fade from the center outward, eliminating the solid look */
+    background: radial-gradient(circle, rgba(var(--rgb), 0.6) 0%, rgba(var(--rgb), 0) 65%);
     /* Scale transparency based on mouse proximity */
     opacity: calc(0.1 + 0.9 * var(--glow, 0));
     z-index: -1;
