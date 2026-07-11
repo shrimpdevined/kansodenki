@@ -26,14 +26,14 @@
         /* --- Top Bar Layout --- */
         .top-bar {
             display: flex;
-            align-items: center; /* Aligns menu and title perfectly on their horizontal center */
+            align-items: center; 
             padding: 40px;
             gap: 40px;
             position: relative;
             z-index: 10;
         }
 
-        /* --- Title Styling & Containers --- */
+        /* --- Title Styling & True Text Scanlines --- */
         .title-wrapper {
             position: relative;
             display: flex;
@@ -41,16 +41,24 @@
             justify-content: center;
         }
 
-        /* Scanlines for the Title */
-        .title-wrapper::after {
-            content: " ";
+        .ja-title, .en-title {
+            position: relative;
+            margin: 0;
+        }
+
+        /* This applies the scanlines ONLY inside the letters, removing the bounding box */
+        .ja-title::after, .en-title::after {
+            content: attr(data-text);
             position: absolute;
-            inset: -15px; /* Pulls the scanlines out slightly to cover the drop shadows */
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
+            top: 0;
+            left: 0;
+            color: transparent;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.45) 50%);
             background-size: 100% 4px;
-            pointer-events: none; 
-            animation: screenFlicker 0.15s infinite;
-            z-index: 20;
+            background-clip: text;
+            -webkit-background-clip: text;
+            pointer-events: none;
+            z-index: 5;
         }
 
         .ja-title {
@@ -61,7 +69,7 @@
             text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff;
             letter-spacing: 5px;
             line-height: 1;
-            animation: titleGlitch 10s infinite; /* 10 second delay for less frequent glitches */
+            animation: titleGlitch 20s infinite; 
         }
 
         .en-title {
@@ -69,37 +77,58 @@
             font-style: italic;
             font-weight: 900;
             color: #ffffff;
-            text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff; /* Thinner shadow for small text */
+            text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff;
             letter-spacing: 12px;
             margin-top: 8px;
             margin-left: 5px;
-            animation: subTitleGlitch 10s infinite 0.1s; /* Slightly offset for a tearing effect */
+            animation: subTitleGlitch 20s infinite 0.1s; /* Slightly offset from the main title */
         }
 
-        /* --- Erratic Static Glitch Animations --- */
+        /* --- Multi-Phase Glitch Cycle (16s stable, 4s of distinct variations) --- */
         @keyframes titleGlitch {
-            0%, 93% { opacity: 1; transform: translate(0, 0) skew(0deg); text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff; }
-            94% { opacity: 0.8; transform: translate(-4px, 2px) skew(-5deg); text-shadow: -4px 4px 0px #ff0055, 6px -4px 0px #00ffff; }
-            95% { opacity: 0.4; transform: translate(4px, -2px) skew(5deg); text-shadow: 8px -2px 0px #ff0055, -8px 4px 0px #00ffff; }
-            96% { opacity: 1; transform: translate(-2px, -2px) skew(0deg); text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff; }
-            97% { opacity: 0.2; transform: translate(2px, 4px) skew(-10deg); text-shadow: -8px 6px 0px #ff0055, 8px -2px 0px #00ffff; }
-            98% { opacity: 0.9; transform: translate(-3px, -3px) skew(10deg); text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff; }
-            99% { opacity: 0.6; transform: translate(2px, 2px) skew(0deg); text-shadow: 6px -4px 0px #ff0055, -6px 4px 0px #00ffff; }
-            100% { opacity: 1; transform: translate(0, 0) skew(0deg); text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff; }
+            0%, 82% { 
+                opacity: 1; transform: skew(0deg); filter: blur(0px);
+                text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff; 
+            }
+            /* Variation 1: Color separation jitter */
+            83% { transform: translate(-2px, 1px); text-shadow: 8px -2px 0px #ff0055, -8px 4px 0px #00ffff; }
+            83.5% { transform: translate(2px, -1px); text-shadow: -4px 6px 0px #ff0055, 6px -2px 0px #00ffff; }
+            84% { transform: translate(0, 0); text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff; }
+
+            /* Variation 2: Magnetic skew and blur */
+            87% { transform: skew(15deg); filter: blur(1px); text-shadow: -10px 5px 0px #ff0055, 10px -5px 0px #00ffff; }
+            87.5% { opacity: 0.8; transform: skew(-10deg); filter: blur(2px); text-shadow: 12px -4px 0px #ff0055, -12px 6px 0px #00ffff; }
+            88% { opacity: 1; transform: skew(0deg); filter: blur(0px); text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff; }
+
+            /* Variation 3: Hard horizontal tear */
+            92% { transform: translate(-8px, 0); text-shadow: 15px 0px 0px #ff0055, -15px 0px 0px #00ffff; }
+            92.5% { transform: translate(8px, 0); text-shadow: -15px 0px 0px #ff0055, 15px 0px 0px #00ffff; }
+            93% { transform: translate(0, 0); text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff; }
+
+            /* Variation 4: Vertical bounce */
+            97% { transform: translate(0, 5px); text-shadow: 2px -4px 0px #ff0055, -2px 4px 0px #00ffff; }
+            97.5% { transform: translate(0, -3px); text-shadow: 6px 8px 0px #ff0055, -6px -8px 0px #00ffff; }
+            98%, 100% { opacity: 1; transform: translate(0, 0); text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff; }
         }
 
+        /* Scaled down version for the subtitle */
         @keyframes subTitleGlitch {
-            0%, 93% { opacity: 1; transform: translate(0, 0) skew(0deg); text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff; }
-            94% { opacity: 0.5; transform: translate(3px, -1px) skew(5deg); text-shadow: -2px 4px 0px #ff0055, 4px -2px 0px #00ffff; }
-            95% { opacity: 0.8; transform: translate(-3px, 2px) skew(-5deg); text-shadow: 4px -2px 0px #ff0055, -4px 4px 0px #00ffff; }
-            96% { opacity: 0.2; transform: translate(-1px, 3px) skew(-10deg); text-shadow: -4px 2px 0px #ff0055, 4px -4px 0px #00ffff; }
-            97%, 100% { opacity: 1; transform: translate(0, 0) skew(0deg); text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff; }
-        }
-
-        @keyframes screenFlicker {
-            0% { opacity: 0.95; }
-            50% { opacity: 1; }
-            100% { opacity: 0.95; }
+            0%, 82% { 
+                opacity: 1; transform: skew(0deg); filter: blur(0px);
+                text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff; 
+            }
+            83% { transform: translate(-1px, 1px); text-shadow: 4px -1px 0px #ff0055, -4px 2px 0px #00ffff; }
+            83.5% { transform: translate(1px, -1px); text-shadow: -2px 3px 0px #ff0055, 3px -1px 0px #00ffff; }
+            84% { transform: translate(0, 0); text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff; }
+            87% { transform: skew(10deg); filter: blur(1px); text-shadow: -5px 2px 0px #ff0055, 5px -2px 0px #00ffff; }
+            87.5% { opacity: 0.8; transform: skew(-5deg); filter: blur(1.5px); text-shadow: 6px -2px 0px #ff0055, -6px 3px 0px #00ffff; }
+            88% { opacity: 1; transform: skew(0deg); filter: blur(0px); text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff; }
+            92% { transform: translate(-4px, 0); text-shadow: 8px 0px 0px #ff0055, -8px 0px 0px #00ffff; }
+            92.5% { transform: translate(4px, 0); text-shadow: -8px 0px 0px #ff0055, 8px 0px 0px #00ffff; }
+            93% { transform: translate(0, 0); text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff; }
+            97% { transform: translate(0, 3px); text-shadow: 1px -2px 0px #ff0055, -1px 2px 0px #00ffff; }
+            97.5% { transform: translate(0, -2px); text-shadow: 3px 4px 0px #ff0055, -3px -4px 0px #00ffff; }
+            98%, 100% { opacity: 1; transform: translate(0, 0); text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff; }
         }
 
         /* --- Hexagon Navigation Styles --- */
@@ -110,10 +139,11 @@
             flex-direction: column;
         }
 
+        /* Increased dimensions for larger text */
         .hex-wrapper {
-            width: 120px;
-            height: 104px;
-            margin-bottom: 5px;
+            width: 130px; 
+            height: 113px; /* Mathematically scaled height */
+            margin-bottom: 6px;
             text-decoration: none;
             
             filter: drop-shadow(0 0 calc(2px + 20px * var(--glow, 0)) rgba(var(--rgb), calc(0.3 + 0.7 * var(--glow, 0))));
@@ -125,10 +155,8 @@
             width: 100%;
             height: 100%;
             clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-            
             background-color: rgba(var(--rgb), calc(0.15 + 0.35 * var(--glow, 0)));
             backdrop-filter: blur(4px);
-            
             display: flex;
             justify-content: center;
             align-items: center;
@@ -143,7 +171,6 @@
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%);
             background-size: 100% 4px;
             pointer-events: none; 
-            animation: screenFlicker 0.15s infinite;
         }
 
         .hex:hover {
@@ -157,31 +184,32 @@
             align-items: center;
             justify-content: center;
             pointer-events: none; 
-            z-index: 2; /* Keeps text slightly above the scanline overlay */
+            z-index: 2; 
         }
 
         .ja-text {
             color: #ffffff;
             text-shadow: 0 0 5px rgba(var(--rgb), 1);
-            font-size: 1.1rem;
+            font-size: 1.4rem; /* Significantly larger */
             font-weight: 900;
             letter-spacing: 2px;
-            line-height: 1.2;
+            line-height: 1.1;
         }
 
         .en-text {
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 0.95);
             text-shadow: 0 0 3px rgba(var(--rgb), 0.8);
-            font-size: 0.55rem;
+            font-size: 0.65rem; /* Larger */
             font-weight: 800;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
             text-transform: uppercase;
+            margin-top: 2px;
         }
 
         /* Sub-menu Hiding Logic */
         .sub-menu {
             position: absolute;
-            top: 109px;
+            top: 119px; /* Main height (113) + margin (6) */
             display: flex;
             flex-direction: column;
         }
@@ -251,10 +279,10 @@
             </div>
         </nav>
 
-        <!-- Japanese Title with Subtitle -->
+        <!-- Japanese Title with Subtitle - Using data-text for the scanline trick -->
         <div class="title-wrapper">
-            <h1 class="ja-title">簡素電気</h1>
-            <h2 class="en-title">SIMPLE ELECTRIC</h2>
+            <h1 class="ja-title" data-text="簡素電気">簡素電気</h1>
+            <h2 class="en-title" data-text="SIMPLE ELECTRIC">SIMPLE ELECTRIC</h2>
         </div>
 
     </header>
