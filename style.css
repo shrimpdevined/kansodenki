@@ -294,12 +294,14 @@ body {
 .hex-wrapper::before, .proj-hex-wrapper::before {
     content: "";
     position: absolute;
-    inset: 0;
+    /* Shrink the core of the glow slightly so it sits behind the hex */
+    top: 15%; left: 15%; right: 15%; bottom: 15%;
+    /* Create a bright core using the RGB variable */
     background-color: rgb(var(--rgb));
-    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    filter: blur(20px);
-    /* Instead of drawing a new shadow shape, we just change transparency */
-    opacity: calc(0.1 + 0.6 * var(--glow, 0));
+    /* Let the blur bleed outward freely (NO clip-path here!) */
+    filter: blur(25px);
+    /* Scale transparency based on mouse proximity */
+    opacity: calc(0.1 + 0.9 * var(--glow, 0));
     z-index: -1;
     pointer-events: none;
     will-change: opacity;
