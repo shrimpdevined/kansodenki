@@ -303,7 +303,7 @@ body {
     /* Expand the invisible box massively so the light never hits a hard edge */
     inset: -20%; 
     /* circle closest-side ensures it stays a perfect circle and fades to 0 exactly at the edges */
-    background: radial-gradient(circle closest-side, rgba(var(--rgb), 0.25) 0%, rgba(var(--rgb), 0) 100%);
+    background: radial-gradient(circle closest-side, rgba(var(--rgb), 0.10) 0%, rgba(var(--rgb), 0) 100%);
     /* Lower the overall intensity so it feels like a soft ambient light */
     opacity: calc(0.0 + 0.75 * var(--glow, 0));
     z-index: -1;
