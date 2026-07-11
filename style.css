@@ -113,14 +113,13 @@ body {
 
 .hex-wrapper {
     width: 130px; height: 113px; margin-bottom: 6px; text-decoration: none;
-    filter: drop-shadow(2px 2px 0px var(--shadow-1)) drop-shadow(-2px -2px 0px var(--shadow-2)) drop-shadow(0 0 calc(2px + 20px * var(--glow, 0)) rgba(var(--rgb), calc(0.3 + 0.7 * var(--glow, 0))));
     transition: opacity 0.4s ease, transform 0.4s ease; cursor: pointer;
 }
 
 .hex {
     position: relative; width: 100%; height: 100%;
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    background-color: rgba(var(--rgb), calc(0.15 + 0.35 * var(--glow, 0))); backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     display: flex; justify-content: center; align-items: center; transition: transform 0.15s ease;
 }
 
@@ -128,8 +127,6 @@ body {
     content: " "; position: absolute; inset: 0; pointer-events: none; animation: screenFlicker 0.15s infinite; 
     background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%); background-size: 100% 4px;
 }
-
-.hex:hover { transform: scale(1.05); }
 
 .hex-content { display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; z-index: 2; }
 .ja-text { color: #ffffff; font-size: 1.4rem; font-weight: 900; letter-spacing: 2px; line-height: 1.1; animation: menuTextGlitch 20s infinite; }
@@ -149,7 +146,8 @@ body {
     font-family: 'Courier New', Courier, monospace; font-size: 1.2rem; line-height: 1.6;
 }
 .page-content.active { opacity: 1; transform: translateY(0); pointer-events: auto; position: relative; }
-/* --- Projects Grid (NEW) --- */
+
+/* --- Projects Grid --- */
 .projects-grid {
     display: flex;
     flex-wrap: nowrap; /* Forces them to stay in an intermeshed line */
@@ -163,10 +161,6 @@ body {
     height: 277px; 
     /* The Honeycomb interlocking math */
     margin-left: -80px; 
-    /* Match the menu's exact drop-shadow glitch effect */
-    filter: drop-shadow(2px 2px 0px var(--shadow-1)) 
-            drop-shadow(-2px -2px 0px var(--shadow-2)) 
-            drop-shadow(0 0 calc(2px + 20px * var(--glow, 0)) rgba(var(--rgb), calc(0.3 + 0.7 * var(--glow, 0))));
     transition: opacity 0.4s ease, transform 0.4s ease;
     cursor: pointer;
 }
@@ -186,8 +180,6 @@ body {
     width: 100%;
     height: 100%;
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    /* Match the menu's exact background styling */
-    background-color: rgba(var(--rgb), calc(0.15 + 0.35 * var(--glow, 0)));
     backdrop-filter: blur(4px);
     transition: transform 0.15s ease;
     padding: 10px; 
@@ -199,10 +191,6 @@ body {
     z-index: 0;
 }
 
-/* Scale up the inner hex on hover just like the menu does */
-.proj-hex:hover {
-    transform: scale(1.05);
-}
 /* CSS Text Wrapping Magic */
 .shape-left {
     float: left; width: 25%; height: 100%;
@@ -250,68 +238,59 @@ body {
     line-height: 1.3;
 }
 
+
 /* =========================================
-   BUG FIXES: Overlapping & Visual Glitching
+   BUG FIXES & DYNAMIC HEXAGON GLOW
    ========================================= */
 
-/* 1. Force hardware acceleration to stop the blur/shadow screen tearing */
+/* 1. Force hardware acceleration to stop screen tearing */
 .hex-wrapper, .proj-hex-wrapper, .hex, .proj-hex {
     will-change: transform, filter;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
 }
 
-/* 2. Stop the inner hexagons from scaling (this caused the edge-jitter) */
+/* 2. Stop the inner hexagons from scaling (prevents edge-jitter) */
 .hex:hover, .proj-hex:hover {
     transform: none !important; 
 }
 
-/* 3. Scale the entire wrappers instead, and bring them to the front so shadows don't clip */
+/* 3. Scale the wrappers and bring them to the front on hover */
 .hex-wrapper:hover, .proj-hex-wrapper:hover {
     transform: scale(1.05);
     z-index: 50;
 }
 
-/* 4. Fix the Project Grid overlapping corners stealing the mouse hovers */
+/* 4. Fix Project Grid overlapping corners stealing mouse hovers */
 .projects-grid .proj-hex-wrapper {
-    pointer-events: none; /* Tells the mouse to ignore the invisible square wrapper */
+    pointer-events: none; 
 }
 .projects-grid .proj-hex {
-    pointer-events: auto; /* Tells the mouse to ONLY trigger on the visible hexagon shape */
+    pointer-events: auto; 
 }
 
-/* =========================================
-   ULTIMATE FIX: GPU Texture Ghosting
-   ========================================= */
-
-/* 1. Strip the dynamic, math-heavy glow from the wrappers. 
-      We only keep the static pink/cyan glitch shadows. */
-.hex-wrapper, .proj-hex-wrapper {
-    filter: drop-shadow(2px 2px 0px var(--shadow-1)) drop-shadow(-2px -2px 0px var(--shadow-2)) !important;
-}
-
-/* 4. Tame the INTERNAL background brightness of the hexagons */
+/* 5. Tame the INTERNAL background brightness */
 .hex, .proj-hex {
-    /* Lowers the base transparency, and only lets it brighten slightly on hover */
     background-color: rgba(var(--rgb), calc(0.05 + 0.1 * var(--glow, 0))) !important;
 }
 
-/* 2. Create a dedicated, bulletproof glow layer behind the hexagons. */
-.hex-wrapper::before, .proj-hex-wrapper::before {
-    content: "";
-    position: absolute;
-    /* Expand the invisible box massively so the light never hits a hard edge */
-    inset: -20%; 
-    /* circle closest-side ensures it stays a perfect circle and fades to 0 exactly at the edges */
-    background: radial-gradient(circle closest-side, rgba(var(--rgb), 0.10) 0%, rgba(var(--rgb), 0) 100%);
-    /* Lower the overall intensity so it feels like a soft ambient light */
-    opacity: calc(0.0 + 0.75 * var(--glow, 0));
-    z-index: -1;
-    pointer-events: none;
-    will-change: opacity;
-}
-
-/* 3. Ensure the glitch text layer inside doesn't cause rendering confusion */
+/* 6. Ensure the glitch text layer inside doesn't cause rendering confusion */
 .hex-content {
     transform: translateZ(0);
+}
+
+/* =========================================
+   PERFECT HEXAGON AURA (No Circles)
+   ========================================= */
+
+/* 
+  We use three drop shadows: 
+  - 1st & 2nd create the static cyan/pink glitch effect
+  - 3rd creates the dynamic glow that traces the exact shape of the hexagon clip-path
+*/
+.hex-wrapper, .proj-hex-wrapper {
+    filter: 
+        drop-shadow(2px 2px 0px var(--shadow-1)) 
+        drop-shadow(-2px -2px 0px var(--shadow-2)) 
+        drop-shadow(0px 0px calc(2px + 15px * var(--glow, 0)) rgba(var(--rgb), calc(0.1 + 0.8 * var(--glow, 0)))) !important;
 }
