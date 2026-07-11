@@ -279,3 +279,33 @@ body {
 .projects-grid .proj-hex {
     pointer-events: auto; /* Tells the mouse to ONLY trigger on the visible hexagon shape */
 }
+
+/* =========================================
+   ULTIMATE FIX: GPU Texture Ghosting
+   ========================================= */
+
+/* 1. Strip the dynamic, math-heavy glow from the wrappers. 
+      We only keep the static pink/cyan glitch shadows. */
+.hex-wrapper, .proj-hex-wrapper {
+    filter: drop-shadow(2px 2px 0px var(--shadow-1)) drop-shadow(-2px -2px 0px var(--shadow-2)) !important;
+}
+
+/* 2. Create a dedicated, bulletproof glow layer behind the hexagons. */
+.hex-wrapper::before, .proj-hex-wrapper::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgb(var(--rgb));
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    filter: blur(20px);
+    /* Instead of drawing a new shadow shape, we just change transparency */
+    opacity: calc(0.1 + 0.6 * var(--glow, 0));
+    z-index: -1;
+    pointer-events: none;
+    will-change: opacity;
+}
+
+/* 3. Ensure the glitch text layer inside doesn't cause rendering confusion */
+.hex-content {
+    transform: translateZ(0);
+}
