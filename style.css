@@ -1,16 +1,16 @@
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Trebuchet MS', 'Lucida Sans', Arial, sans-serif; }
 
 body {
-    background-color: #1a1a24;
+    background-color: #111116; /* Darkened slightly for a premium contrast */
     background-image: 
         linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
     background-size: 40px 40px;
-    background-attachment: fixed; /* Keeps the grid locked while scrolling */
+    background-attachment: fixed; 
     color: #ffffff;
-    min-height: 100vh; /* Allows the page to grow vertically */
+    min-height: 100vh; 
     overflow-x: hidden;
-    overflow-y: auto; /* Enables vertical scrolling */
+    overflow-y: auto; 
 }
 
 /* --- Top Bar & Layout --- */
@@ -25,7 +25,7 @@ body {
     animation: screenFlicker 0.15s infinite;
 }
 
-.main-title-group { display: flex; flex-direction: column; justify-content: center; z-index: 5; background-color: #1a1a24; padding-right: 15px; }
+.main-title-group { display: flex; flex-direction: column; justify-content: center; z-index: 5; background-color: #111116; padding-right: 15px; }
 
 .ja-title {
     font-size: 4.5rem; font-style: italic; font-weight: 900; color: #ffffff;
@@ -121,7 +121,7 @@ body {
 .hex {
     position: relative; width: 100%; height: 100%;
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    backdrop-filter: blur(4px);
+    /* REMOVED BACKDROP-FILTER FOR BUG FIX */
     display: flex; justify-content: center; align-items: center; transition: transform 0.15s ease;
 }
 
@@ -141,46 +141,226 @@ body {
 .nav-wrapper:hover .h1 { transition-delay: 0.1s; } .nav-wrapper:hover .h2 { transition-delay: 0.2s; } .nav-wrapper:hover .h3 { transition-delay: 0.3s; }
 
 /* --- Page Content Areas --- */
-.content-area { position: relative; padding: 0 40px; max-width: 1200px; margin: 20px auto 0; }
+.content-area { position: relative; padding: 0 40px 100px 40px; max-width: 1200px; margin: 20px auto 0; }
 .page-content {
     position: absolute; top: 0; left: 40px; right: 40px; opacity: 0; transform: translateY(20px);
     transition: all 0.5s ease; pointer-events: none; color: rgba(255, 255, 255, 0.8);
-    font-family: 'Courier New', Courier, monospace; font-size: 1.2rem; line-height: 1.6;
+    font-size: 1.2rem; line-height: 1.6;
 }
 .page-content.active { opacity: 1; transform: translateY(0); pointer-events: auto; position: relative; }
+
+/* =========================================
+   C.L.A.M. CYBERPUNK LAUNCH PAGE 
+   ========================================= */
+
+/* Header styling */
+.clam-header { 
+    margin-bottom: 40px; 
+    border-left: 5px solid #00ffff; 
+    padding: 10px 0 10px 20px; 
+    background: linear-gradient(90deg, rgba(0,255,255,0.1) 0%, transparent 100%);
+}
+.cyber-title { 
+    font-size: 3rem; 
+    font-style: italic; 
+    color: #ffffff; 
+    text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff; 
+    letter-spacing: 4px; 
+}
+.cyber-subtitle { 
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.1rem; 
+    color: rgba(255,255,255,0.7); 
+    letter-spacing: 6px; 
+    text-transform: uppercase; 
+    margin-top: 8px; 
+}
+
+/* 
+  THE HONEYCOMB CLUSTER
+  This acts as a floated island that text will beautifully wrap around
+*/
+.clam-gallery { 
+    float: right; 
+    width: 320px; 
+    height: 325px; 
+    position: relative; 
+    margin: 0 0 30px 40px; 
+    /* The magic CSS that lets text mold into the jagged shape */
+    shape-outside: polygon(0 0, 45% 0, 100% 25%, 100% 75%, 45% 100%, 0 100%);
+}
+
+/* Position the 3 hexagons into a perfect interlocked honeycomb */
+.clam-hex { 
+    width: 180px; 
+    height: 156px; 
+    position: absolute !important; 
+    margin: 0 !important; 
+}
+/* Top Left */
+.clam-hex:nth-child(1) { top: 0; left: 0; }
+/* Middle Right (Interlocked) */
+.clam-hex:nth-child(2) { top: 82px; left: 140px; }
+/* Bottom Left */
+.clam-hex:nth-child(3) { top: 164px; left: 0; }
+
+.hex-img-text { 
+    display: flex; align-items: center; justify-content: center; height: 100%; 
+    font-family: 'Courier New', Courier, monospace; font-size: 1.2rem; color: rgba(255,255,255,0.5); 
+}
+
+/* Premium Typography for Description */
+.clam-desc { 
+    font-size: 1.25rem; 
+    line-height: 1.9; 
+    margin-bottom: 60px; 
+    color: rgba(255, 255, 255, 0.9); 
+    text-align: justify;
+}
+
+/* SCI-FI SPECS GRID */
+.clam-specs-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 40px; 
+    margin-bottom: 80px; 
+    clear: both; /* Ensures it pushes below the floated cluster */
+}
+
+/* Sleek chamfered glass panels */
+.spec-box { 
+    background: linear-gradient(135deg, rgba(var(--box-color), 0.1) 0%, rgba(0,0,0,0.5) 100%);
+    border: 1px solid rgba(var(--box-color), 0.4); 
+    padding: 30px; 
+    position: relative;
+    /* Cuts the corners off to look like a sci-fi UI panel */
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+    box-shadow: inset 0 0 20px rgba(var(--box-color), 0.1);
+}
+.spec-box h3 { 
+    color: rgb(var(--box-color)); 
+    margin-bottom: 25px; 
+    letter-spacing: 4px; 
+    font-size: 1.3rem; 
+    font-family: 'Courier New', Courier, monospace;
+    border-bottom: 1px solid rgba(var(--box-color), 0.3);
+    padding-bottom: 10px;
+}
+.spec-box ul { list-style: none; font-family: 'Courier New', Courier, monospace; }
+.spec-box li { 
+    margin-bottom: 15px; 
+    font-size: 1.05rem; 
+    border-bottom: 1px dotted rgba(255,255,255,0.15); 
+    padding-bottom: 8px; 
+    display: flex;
+}
+.spec-box .hl { 
+    color: rgb(var(--box-color)); 
+    font-weight: bold; 
+    margin-right: 15px; 
+    width: 100px; /* Aligns all the spec values nicely */
+    flex-shrink: 0;
+}
+
+/* INTERACTIVE TELEMETRY DASHBOARD */
+.clam-interactive { margin-bottom: 80px; }
+.interactive-title { 
+    color: #ffff00; 
+    margin-bottom: 15px; 
+    letter-spacing: 3px; 
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.5rem;
+}
+.clam-interactive > p { font-size: 1.1rem; color: rgba(255,255,255,0.7); margin-bottom: 30px; }
+
+.comp-widget { 
+    border: 1px solid #333; 
+    background: rgba(0,0,0,0.6); 
+    padding: 30px; 
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+}
+.comp-tabs { 
+    display: flex; 
+    gap: 15px; 
+    border-bottom: 2px solid #222; 
+    padding-bottom: 20px; 
+    margin-bottom: 30px; 
+}
+.comp-tab { 
+    background: #111; 
+    border: 1px solid #444; 
+    color: #888; 
+    padding: 12px 25px; 
+    font-family: 'Courier New', Courier, monospace; 
+    font-weight: bold;
+    font-size: 1rem; 
+    cursor: pointer; 
+    transition: all 0.2s ease; 
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+.comp-tab:hover { background: #222; color: #fff; }
+.comp-tab.active { 
+    background: rgba(0,255,255,0.15); 
+    border-color: #00ffff; 
+    color: #00ffff; 
+    box-shadow: inset 0 0 10px rgba(0,255,255,0.3); 
+}
+
+/* Telemetry Neon Bars */
+.stat-row { display: flex; align-items: center; margin-bottom: 20px; font-family: 'Courier New', Courier, monospace; }
+.stat-label { width: 130px; font-weight: bold; color: rgba(255,255,255,0.5); letter-spacing: 1px;}
+.bar-bg { 
+    flex-grow: 1; 
+    height: 14px; 
+    background: #0a0a0a; 
+    margin: 0 25px; 
+    border: 1px solid #222; 
+    position: relative; 
+    border-radius: 2px;
+    overflow: hidden;
+}
+.bar-fill { 
+    height: 100%; 
+    transition: width 0.8s cubic-bezier(0.2, 1, 0.3, 1); 
+    box-shadow: 0 0 15px currentColor; 
+}
+.stat-val { width: 140px; text-align: right; color: #fff; font-weight: bold; font-size: 1.1rem; }
+.arch-row { margin-top: 35px; padding-top: 25px; border-top: 1px dashed #333; }
+.stat-val-arch { color: #00ffff; letter-spacing: 2px; font-weight: bold; font-size: 1.2rem; }
+
+/* Responsive Grid Fallback */
+@media (max-width: 900px) {
+    .clam-specs-grid { grid-template-columns: 1fr; }
+    .clam-gallery { float: none; margin: 0 auto 40px auto; shape-outside: none; }
+}
+
 
 /* --- Products Grid (Interlocking Honeycomb) --- */
 .projects-grid {
     display: flex;
-    flex-wrap: nowrap; /* Forces them to stay in an intermeshed line */
+    flex-wrap: nowrap; 
     justify-content: center;
     align-items: flex-start;
-    padding: 20px 0 160px 0; /* Extra bottom padding for the staggered row */
+    padding: 20px 0 160px 0; 
 }
 
 .proj-hex-wrapper {
     width: 320px;
     height: 277px; 
-    margin-left: -80px; /* Honeycomb interlocking */
+    margin-left: -80px; 
     transition: opacity 0.4s ease, transform 0.4s ease;
     cursor: pointer;
 }
 
-.proj-hex-wrapper:first-child {
-    margin-left: 0;
-}
-
-/* Stagger every second hexagon downward */
-.proj-hex-wrapper:nth-child(even) {
-    margin-top: 138px; 
-}
+.proj-hex-wrapper:first-child { margin-left: 0; }
+.proj-hex-wrapper:nth-child(even) { margin-top: 138px; }
 
 .proj-hex {
     position: relative;
     width: 100%;
     height: 100%;
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    backdrop-filter: blur(4px);
+    /* REMOVED BACKDROP-FILTER FOR BUG FIX */
     transition: transform 0.15s ease;
     padding: 10px; 
 }
@@ -200,55 +380,6 @@ body {
 .proj-content h4 { color: #ffffff; font-family: 'Trebuchet MS', sans-serif; font-size: 1.3rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; text-shadow: 0 0 5px rgba(var(--rgb), 1); }
 .proj-content p { font-family: 'Courier New', Courier, monospace; font-size: 0.85rem; color: rgba(255, 255, 255, 0.9); line-height: 1.3; }
 
-/* =========================================
-   C.L.A.M. CYBERPUNK HOME INTERFACE
-   ========================================= */
-
-.clam-header { margin-bottom: 20px; border-left: 4px solid #00ffff; padding-left: 15px; }
-.cyber-title { font-size: 2.5rem; font-style: italic; color: #ffffff; text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff; letter-spacing: 2px; }
-.cyber-subtitle { font-size: 1rem; color: rgba(255,255,255,0.7); letter-spacing: 4px; text-transform: uppercase; margin-top: 5px; }
-.clam-desc { font-size: 1.1rem; line-height: 1.8; margin-bottom: 40px; max-width: 900px; color: rgba(0, 255, 255, 0.8); background: rgba(0,255,255,0.05); padding: 15px; border: 1px solid rgba(0,255,255,0.2); }
-
-/* CLAM Hex Gallery */
-.clam-gallery { display: flex; gap: 20px; margin-bottom: 50px; justify-content: center; }
-/* Override the honeycomb math so these sit flat next to each other */
-.clam-hex { width: 180px; height: 156px; margin-left: 0 !important; margin-top: 0 !important; }
-.hex-img-text { display: flex; align-items: center; justify-content: center; height: 100%; font-family: 'Courier New', Courier, monospace; font-size: 1.2rem; color: rgba(255,255,255,0.5); }
-
-/* Specs Grid */
-.clam-specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 60px; }
-.spec-box { background: rgba(var(--box-color), 0.05); border: 1px solid rgba(var(--box-color), 0.3); padding: 25px; position: relative; }
-.spec-box::before { content: ""; position: absolute; top: -1px; left: -1px; width: 20px; height: 20px; border-top: 2px solid rgb(var(--box-color)); border-left: 2px solid rgb(var(--box-color)); }
-.spec-box::after { content: ""; position: absolute; bottom: -1px; right: -1px; width: 20px; height: 20px; border-bottom: 2px solid rgb(var(--box-color)); border-right: 2px solid rgb(var(--box-color)); }
-.spec-box h3 { color: rgb(var(--box-color)); margin-bottom: 15px; letter-spacing: 2px; font-size: 1.2rem; }
-.spec-box ul { list-style: none; }
-.spec-box li { margin-bottom: 10px; font-size: 0.95rem; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 5px; }
-.spec-box .hl { color: rgb(var(--box-color)); font-weight: bold; margin-right: 10px; }
-
-/* Interactive Comparison Widget */
-.clam-interactive { margin-bottom: 100px; }
-.interactive-title { color: #ffff00; margin-bottom: 10px; letter-spacing: 2px; }
-.comp-widget { margin-top: 25px; border: 1px solid #333; background: rgba(0,0,0,0.4); padding: 20px; }
-.comp-tabs { display: flex; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px; }
-.comp-tab { background: transparent; border: 1px solid #555; color: #888; padding: 10px 20px; font-family: 'Courier New', Courier, monospace; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; }
-.comp-tab:hover { border-color: #00ffff; color: #00ffff; }
-.comp-tab.active { background: rgba(0,255,255,0.1); border-color: #00ffff; color: #00ffff; box-shadow: 0 0 10px rgba(0,255,255,0.2); }
-
-/* Telemetry Bars */
-.stat-row { display: flex; align-items: center; margin-bottom: 15px; }
-.stat-label { width: 120px; font-weight: bold; color: rgba(255,255,255,0.6); }
-.bar-bg { flex-grow: 1; height: 12px; background: rgba(255,255,255,0.05); margin: 0 20px; border: 1px solid #333; position: relative; }
-.bar-fill { height: 100%; transition: width 0.8s cubic-bezier(0.2, 1, 0.3, 1); box-shadow: 0 0 10px currentColor; }
-.stat-val { width: 120px; text-align: right; color: #fff; font-weight: bold; }
-.arch-row { margin-top: 25px; padding-top: 15px; border-top: 1px dashed #333; }
-.stat-val-arch { color: #00ffff; letter-spacing: 1px; }
-
-/* Responsive Grid Fallback */
-@media (max-width: 900px) {
-    .clam-specs-grid { grid-template-columns: 1fr; }
-    .clam-gallery { flex-wrap: wrap; }
-}
-
 
 /* =========================================
    BUG FIXES & DYNAMIC HEXAGON GLOW
@@ -262,9 +393,7 @@ body {
 }
 
 /* 2. Stop the inner hexagons from scaling (prevents edge-jitter) */
-.hex:hover, .proj-hex:hover {
-    transform: none !important; 
-}
+.hex:hover, .proj-hex:hover { transform: none !important; }
 
 /* 3. Scale the wrappers and bring them to the front on hover */
 .hex-wrapper:hover, .proj-hex-wrapper:hover {
@@ -273,12 +402,8 @@ body {
 }
 
 /* 4. Fix Project Grid overlapping corners stealing mouse hovers */
-.projects-grid .proj-hex-wrapper {
-    pointer-events: none; 
-}
-.projects-grid .proj-hex {
-    pointer-events: auto; 
-}
+.projects-grid .proj-hex-wrapper { pointer-events: none; }
+.projects-grid .proj-hex { pointer-events: auto; }
 
 /* 5. Tame the INTERNAL background brightness */
 .hex, .proj-hex {
@@ -286,19 +411,12 @@ body {
 }
 
 /* 6. Ensure the glitch text layer inside doesn't cause rendering confusion */
-.hex-content {
-    transform: translateZ(0);
-}
+.hex-content { transform: translateZ(0); }
 
 /* =========================================
    PERFECT HEXAGON AURA (No Circles)
    ========================================= */
 
-/* 
-  We use three drop shadows: 
-  - 1st & 2nd create the static cyan/pink glitch effect
-  - 3rd creates the dynamic glow that traces the exact shape of the hexagon clip-path
-*/
 .hex-wrapper, .proj-hex-wrapper {
     filter: 
         drop-shadow(2px 2px 0px var(--shadow-1)) 
