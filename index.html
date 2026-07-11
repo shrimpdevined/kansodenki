@@ -1,5 +1,132 @@
-Kanso Denki
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanso Denki</title>
+    <style>
+        /* Reset margins for a clean slate */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
+        body {
+            /* A sleek dark mode background */
+            background-color: #121212; 
+            color: #ffffff;
+            height: 100vh;
+            overflow-x: hidden;
+        }
 
-    Welcome to kansodenki.com!
-    My first elements are on the screen.
+        /* Center the main title */
+        header {
+            text-align: center;
+            padding-top: 100px; 
+        }
+
+        h1 {
+            font-size: 4rem;
+            letter-spacing: 5px;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+
+        /* --- Hexagon Navigation Styles --- */
+        
+        .nav-wrapper {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px; /* Space between hexagon and links */
+        }
+
+        .hex-button {
+            width: 60px;
+            height: 60px;
+            background-color: #00d2ff; /* Kanso Denki accent color */
+            /* This polygon draws the exact coordinates for a hexagon */
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.4s ease;
+        }
+
+        .hex-button span {
+            color: #121212;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: opacity 0.3s ease;
+        }
+
+        /* When the mouse hovers over the wrapper, rotate the hexagon */
+        .nav-wrapper:hover .hex-button {
+            transform: rotate(90deg);
+        }
+
+        /* Fade out the "Menu" text during rotation */
+        .nav-wrapper:hover .hex-button span {
+            opacity: 0; 
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+            
+            /* Hide the links by default and shift them to the left */
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.4s ease;
+            pointer-events: none; /* Prevents clicking invisible links */
+        }
+
+        /* When the wrapper is hovered, fade the links in and slide them right */
+        .nav-wrapper:hover .nav-links {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto; 
+        }
+
+        .nav-links a {
+            color: #888888;
+            text-decoration: none;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: #00d2ff; /* Matches the hexagon */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Left Interactive Menu -->
+    <nav class="nav-wrapper">
+        <div class="hex-button">
+            <span>Menu</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <header>
+        <h1>Kanso Denki</h1>
+    </header>
+
+</body>
+</html>
