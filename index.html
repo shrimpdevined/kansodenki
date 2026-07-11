@@ -28,7 +28,7 @@
             display: flex;
             align-items: center; 
             padding: 40px;
-            gap: 20px; /* Brought the title much closer to the menu */
+            gap: 20px; 
             position: relative;
             z-index: 10;
         }
@@ -39,7 +39,6 @@
             display: flex;
             align-items: center;
             
-            /* CSS Mask for the text scanlines */
             -webkit-mask-image: linear-gradient(rgba(0,0,0,1) 50%, rgba(0,0,0,0.6) 50%);
             -webkit-mask-size: 100% 4px;
             mask-image: linear-gradient(rgba(0,0,0,1) 50%, rgba(0,0,0,0.6) 50%);
@@ -52,8 +51,8 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            z-index: 5; /* Keeps main title above the sliding page titles */
-            background-color: #1a1a24; /* Solid background blocks the sliding text from showing through */
+            z-index: 5; 
+            background-color: #1a1a24; 
             padding-right: 15px; 
         }
 
@@ -62,7 +61,6 @@
             font-style: italic;
             font-weight: 900;
             color: #ffffff;
-            /* Uses variables so the color can change per page */
             text-shadow: 4px 4px 0px var(--shadow-1), -4px -4px 0px var(--shadow-2);
             letter-spacing: 5px;
             line-height: 1;
@@ -89,7 +87,6 @@
             justify-content: center;
             top: 50%;
             left: 0;
-            /* Starts hidden behind the main title */
             transform: translateY(-50%) translateX(20px); 
             opacity: 0;
             z-index: 1; 
@@ -99,11 +96,11 @@
 
         .page-title.active {
             opacity: 1;
-            left: 100%; /* Slides to the right edge of the main title */
+            left: 100%; 
             transform: translateY(-50%) translateX(0px);
         }
 
-        /* --- Dynamic Glitch Cycle using CSS Variables --- */
+        /* --- Master 20s Glitch Cycle --- */
         @keyframes titleGlitch {
             0%, 82% { 
                 opacity: 1; transform: skew(0deg); filter: blur(0px);
@@ -191,7 +188,6 @@
 
         .hex:hover { transform: scale(1.05); }
 
-        /* Menu text glitching effect */
         .hex-content {
             display: flex;
             flex-direction: column;
@@ -199,33 +195,26 @@
             justify-content: center;
             pointer-events: none; 
             z-index: 2; 
-            animation: menuGlitch 12s infinite;
         }
 
-        @keyframes menuGlitch {
-            0%, 94% { transform: translate(0,0) skew(0deg); }
-            95% { transform: translate(-2px, 1px) skew(5deg); }
-            96% { transform: translate(2px, -1px) skew(-5deg); }
-            97%, 100% { transform: translate(0,0) skew(0deg); }
-        }
-
+        /* Synchronized with main titles */
         .ja-text {
             color: #ffffff;
-            text-shadow: 0 0 5px rgba(var(--rgb), 1);
             font-size: 1.4rem; 
             font-weight: 900;
             letter-spacing: 2px;
             line-height: 1.1;
+            animation: titleGlitch 20s infinite;
         }
 
         .en-text {
             color: rgba(255, 255, 255, 0.95);
-            text-shadow: 0 0 3px rgba(var(--rgb), 0.8);
             font-size: 0.65rem; 
             font-weight: 800;
             letter-spacing: 2px;
             text-transform: uppercase;
             margin-top: 2px;
+            animation: subTitleGlitch 20s infinite 0.1s;
         }
 
         .sub-menu {
@@ -271,7 +260,6 @@
             transition: all 0.5s ease;
             pointer-events: none;
             
-            /* Retro terminal styling for the text */
             color: rgba(255, 255, 255, 0.8);
             font-family: 'Courier New', Courier, monospace;
             font-size: 1.2rem;
@@ -300,8 +288,8 @@
         
         <!-- Interactive Menu -->
         <nav class="nav-wrapper">
-            <!-- Main menu button returns you home -->
-            <a href="#home" class="hex-wrapper main-wrapper" style="--rgb: 0, 255, 255;">
+            <!-- Shadow variables added inline to feed the glitch animation for each button -->
+            <a href="#home" class="hex-wrapper main-wrapper" style="--rgb: 0, 255, 255; --shadow-1: #ff0055; --shadow-2: #00ffff;">
                 <div class="hex">
                     <div class="hex-content">
                         <span class="ja-text">メニュー</span>
@@ -311,7 +299,7 @@
             </a>
             
             <div class="sub-menu">
-                <a href="#projects" class="hex-wrapper sub-wrapper h1" style="--rgb: 255, 0, 85;">
+                <a href="#projects" class="hex-wrapper sub-wrapper h1" style="--rgb: 255, 0, 85; --shadow-1: #00ffff; --shadow-2: #ff0055;">
                     <div class="hex">
                         <div class="hex-content">
                             <span class="ja-text">計画</span>
@@ -319,17 +307,17 @@
                         </div>
                     </div>
                 </a>
-                <a href="#about" class="hex-wrapper sub-wrapper h2" style="--rgb: 255, 255, 0;">
+                <a href="#about" class="hex-wrapper sub-wrapper h2" style="--rgb: 255, 255, 0; --shadow-1: #ff0055; --shadow-2: #ffff00;">
                     <div class="hex">
-                        <div class="hex-content" style="animation-delay: 1s;">
+                        <div class="hex-content">
                             <span class="ja-text">概要</span>
                             <span class="en-text">About</span>
                         </div>
                     </div>
                 </a>
-                <a href="#contact" class="hex-wrapper sub-wrapper h3" style="--rgb: 255, 85, 0;">
+                <a href="#contact" class="hex-wrapper sub-wrapper h3" style="--rgb: 255, 85, 0; --shadow-1: #ffff00; --shadow-2: #ff5500;">
                     <div class="hex">
-                        <div class="hex-content" style="animation-delay: 2s;">
+                        <div class="hex-content">
                             <span class="ja-text">通信</span>
                             <span class="en-text">Contact</span>
                         </div>
@@ -414,19 +402,16 @@
         // Handle Single Page Navigation
         document.querySelectorAll('.hex-wrapper').forEach(link => {
             link.addEventListener('click', (e) => {
-                // Ignore empty links
                 const targetHref = link.getAttribute('href');
                 if (!targetHref || !targetHref.startsWith('#')) return;
                 
                 e.preventDefault();
                 const targetId = targetHref.substring(1); 
                 
-                // Hide all page content and show target
                 document.querySelectorAll('.page-content').forEach(section => section.classList.remove('active'));
                 const targetContent = document.getElementById(targetId + '-content');
                 if(targetContent) targetContent.classList.add('active');
                 
-                // Hide all sliding titles and show target
                 document.querySelectorAll('.page-title').forEach(title => title.classList.remove('active'));
                 const targetTitle = document.getElementById(targetId + '-title');
                 if(targetTitle) targetTitle.classList.add('active');
