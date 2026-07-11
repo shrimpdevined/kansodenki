@@ -23,26 +23,57 @@
             overflow-x: hidden;
         }
 
+        /* --- CRT Scanline Overlay --- */
+        body::after {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            /* Creates the horizontal scanlines */
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+            z-index: 999;
+            pointer-events: none; /* Lets you click *through* the scanlines */
+            animation: screenFlicker 0.15s infinite;
+        }
+
+        @keyframes screenFlicker {
+            0% { opacity: 0.95; }
+            50% { opacity: 1; }
+            100% { opacity: 0.95; }
+        }
+
         /* --- Top Bar Layout --- */
         .top-bar {
             display: flex;
-            align-items: flex-start; /* Aligns items to the top */
+            align-items: flex-start;
             padding: 40px;
-            gap: 40px; /* Space between the menu and the title */
+            gap: 40px;
             position: relative;
             z-index: 10;
         }
 
         h1 {
-            font-size: 4.5rem;
+            font-size: 5rem;
             font-style: italic;
             font-weight: 900;
-            text-transform: uppercase;
             color: #ffffff;
             text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff;
             letter-spacing: 5px;
-            /* Push the title down slightly to align with the center of the first hexagon */
             margin-top: 10px; 
+            animation: textGlitch 3s infinite; /* Periodic CRT text glitch */
+        }
+
+        /* Subtle randomized glitch for the title */
+        @keyframes textGlitch {
+            0%, 96% { opacity: 1; text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff; }
+            97% { opacity: 0.8; text-shadow: 6px 4px 0px #ff0055, -6px -4px 0px #00ffff; }
+            98% { opacity: 0.9; text-shadow: 2px 4px 0px #ff0055, -2px -4px 0px #00ffff; }
+            99% { opacity: 0.5; text-shadow: 8px 4px 0px #ff0055, -8px -4px 0px #00ffff; }
+            100% { opacity: 1; text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff; }
         }
 
         /* --- Hexagon Navigation Styles --- */
@@ -51,13 +82,11 @@
             position: relative;
             display: flex;
             flex-direction: column;
-            /* The wrapper now tightly hugs the buttons, no invisible padding */
         }
 
-        /* Increased size to fit full text */
         .hex-wrapper {
             width: 120px;
-            height: 104px; /* Mathematically perfect 86.6% of 120px */
+            height: 104px;
             margin-bottom: 5px;
             text-decoration: none;
             
@@ -93,12 +122,9 @@
             transform: scale(1.05); 
         }
 
-        /* Sub-menu Container */
         .sub-menu {
-            /* Absolute positioning takes the hidden buttons out of the layout flow 
-               so they don't accidentally trigger the hover state early */
             position: absolute;
-            top: 109px; /* Height of the main button (104px) + gap (5px) */
+            top: 109px;
             display: flex;
             flex-direction: column;
         }
@@ -113,7 +139,6 @@
         .h2 { transition-delay: 0.1s; }
         .h3 { transition-delay: 0s; }
 
-        /* Trigger cascade ONLY when hovering the actual menu components */
         .nav-wrapper:hover .sub-wrapper {
             opacity: 1;
             transform: translateY(0);
@@ -128,7 +153,6 @@
 </head>
 <body>
 
-    <!-- Header containing Menu and Title Side-by-Side -->
     <header class="top-bar">
         
         <!-- Interactive Menu -->
@@ -150,8 +174,8 @@
             </div>
         </nav>
 
-        <!-- Main Title -->
-        <h1>Kanso Denki</h1>
+        <!-- Main Title in Kanji -->
+        <h1>簡素電気</h1>
 
     </header>
 
