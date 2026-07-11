@@ -1,147 +1,149 @@
-Kanso Denki
-    
-    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanso Denki</title>
+    <!-- The ./ forces it to look in the exact same folder -->
+    <link rel="stylesheet" href="./style.css">
+    <script src="./script.js" defer></script>
+</head>
+<body>
+    <header class="top-bar">
+        <!-- Interactive Menu -->
+        <nav class="nav-wrapper">
+            <a href="#home" class="hex-wrapper main-wrapper" style="--rgb: 0, 255, 255; --shadow-1: #ff0055; --shadow-2: #00ffff;">
+                <div class="hex">
+                    <div class="hex-content">
+                        <span class="ja-text">メニュー</span>
+                        <span class="en-text">Menu</span>
+                    </div>
+                </div>
+            </a>
+            
+            <div class="sub-menu">
+                <a href="#projects" class="hex-wrapper sub-wrapper h1" style="--rgb: 255, 0, 85; --shadow-1: #00ffff; --shadow-2: #ff0055;">
+                    <div class="hex">
+                        <div class="hex-content">
+                            <span class="ja-text">計画</span>
+                            <span class="en-text">Projects</span>
+                        </div>
+                    </div>
+                </a>
+                <a href="#about" class="hex-wrapper sub-wrapper h2" style="--rgb: 255, 255, 0; --shadow-1: #ff0055; --shadow-2: #ffff00;">
+                    <div class="hex">
+                        <div class="hex-content">
+                            <span class="ja-text">概要</span>
+                            <span class="en-text">About</span>
+                        </div>
+                    </div>
+                </a>
+                <a href="#contact" class="hex-wrapper sub-wrapper h3" style="--rgb: 255, 85, 0; --shadow-1: #ffff00; --shadow-2: #ff5500;">
+                    <div class="hex">
+                        <div class="hex-content">
+                            <span class="ja-text">通信</span>
+                            <span class="en-text">Contact</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </nav>
 
+        <!-- Dynamic Title Container -->
+        <div class="title-wrapper">
+            <div class="main-title-group" style="--shadow-1: #ff0055; --shadow-2: #00ffff;">
+                <h1 class="ja-title">簡素電気</h1>
+                <h2 class="en-title">SIMPLE ELECTRIC</h2>
+            </div>
 
-    
-        
-        
+            <div class="page-title" id="projects-title" style="--shadow-1: #ff0055; --shadow-2: #00ffff;">
+                <h1 class="ja-title">計画</h1>
+                <h2 class="en-title">PROJECTS</h2>
+            </div>
             
-                
-                    
-                        メニュー
-                        Menu
-                    
-                
-            
-            
-            
-                
-                    
-                        
-                            計画
-                            Projects
-                        
-                    
-                
-                
-                    
-                        
-                            概要
-                            About
-                        
-                    
-                
-                
-                    
-                        
-                            通信
-                            Contact
-                        
-                    
-                
-            
-        
+            <div class="page-title" id="about-title" style="--shadow-1: #ffff00; --shadow-2: #ff0055;">
+                <h1 class="ja-title">概要</h1>
+                <h2 class="en-title">ABOUT</h2>
+            </div>
 
-        
-        
-            
-                簡素電気
-                SIMPLE ELECTRIC
-            
+            <div class="page-title" id="contact-title" style="--shadow-1: #ff5500; --shadow-2: #ffff00;">
+                <h1 class="ja-title">通信</h1>
+                <h2 class="en-title">CONTACT</h2>
+            </div>
+        </div>
+    </header>
 
-            
-                計画
-                PROJECTS
-            
-            
-            
-                概要
-                ABOUT
-            
+    <!-- Main Content Area -->
+    <main class="content-area">
+        <section id="home-content" class="page-content active">
+            <h3>System Status: Online</h3>
+            <p>Welcome to the main terminal. Navigate using the hex interface above.</p>
+        </section>
 
-            
-                通信
-                CONTACT
-            
-        
-    
+        <!-- Project Grid Section -->
+        <section id="projects-content" class="page-content">
+            <div class="projects-grid">
+                
+                <div class="proj-hex-wrapper" style="--rgb: 255, 0, 85;">
+                    <div class="proj-hex">
+                        <div class="shape-left"></div>
+                        <div class="shape-right"></div>
+                        <div class="proj-content">
+                            <div class="proj-mini-img" style="background-color: #ff0055;"></div>
+                            <h4>QLMS V2</h4>
+                            <p>Autonomous software engineering graph. Built as a multi-use system administrator requiring core architecture fixes over manual patching.</p>
+                        </div>
+                    </div>
+                </div>
 
-    
-        
-            System Status: Online
-            Welcome to the main terminal. Navigate using the hex interface above.
-        
+                <div class="proj-hex-wrapper" style="--rgb: 0, 255, 255;">
+                    <div class="proj-hex">
+                        <div class="shape-left"></div>
+                        <div class="shape-right"></div>
+                        <div class="proj-content">
+                            <div class="proj-mini-img" style="background-color: #00ffff;"></div>
+                            <h4>Chunk Engine</h4>
+                            <p>Custom C-based game engine utilizing Raylib. Focused on optimizing rendering routines to maintain visual beauty without sacrificing frame rates.</p>
+                        </div>
+                    </div>
+                </div>
 
-        
-        
-            
-                
-                
-                
-                    
-                        
-                        
-                        
-                        
-                        
-                            
-                            QLMS V2
-                            Autonomous software engineering graph. Built as a multi-use system administrator requiring core architecture fixes over manual patching.
-                        
-                    
-                
+                <div class="proj-hex-wrapper" style="--rgb: 255, 255, 0;">
+                    <div class="proj-hex">
+                        <div class="shape-left"></div>
+                        <div class="shape-right"></div>
+                        <div class="proj-content">
+                            <div class="proj-mini-img" style="background-color: #ffff00;"></div>
+                            <h4>3D Scaling</h4>
+                            <p>Photogrammetry pipeline. Scanning physical objects to meshes and scaling to precise real-world dimensions (exactly 210 cm) in Autodesk 3ds Max.</p>
+                        </div>
+                    </div>
+                </div>
 
-                
-                
-                    
-                        
-                        
-                        
-                        
-                            
-                            Chunk Engine
-                            Custom C-based game engine utilizing Raylib. Focused on optimizing rendering routines to maintain visual beauty without sacrificing frame rates.
-                        
-                    
-                
+                <div class="proj-hex-wrapper" style="--rgb: 255, 85, 0;">
+                    <div class="proj-hex">
+                        <div class="shape-left"></div>
+                        <div class="shape-right"></div>
+                        <div class="proj-content">
+                            <div class="proj-mini-img" style="background-color: #ff5500;"></div>
+                            <h4>LLM Orchestrator</h4>
+                            <p>Dynamic local LLM orchestration system. Manages resource allocation and model unloading seamlessly between Ollama and LM Studio instances.</p>
+                        </div>
+                    </div>
+                </div>
 
-                
-                
-                    
-                        
-                        
-                        
-                        
-                            
-                            3D Scaling
-                            Photogrammetry pipeline. Scanning physical objects to meshes and scaling to precise real-world dimensions (exactly 210cm) in Autodesk 3ds Max.
-                        
-                    
-                
+            </div>
+        </section>
 
-                
-                
-                    
-                        
-                        
-                        
-                        
-                            
-                            LLM Orchestrator
-                            Dynamic local LLM orchestration system. Manages resource allocation and model unloading seamlessly between Ollama and LM Studio instances.
-                        
-                    
-                
+        <section id="about-content" class="page-content">
+            <h3 style="color: #ffff00;">System Architecture</h3>
+            <p>Kanso Denki represents the intersection of robust C game programming, autonomous software engineering graphs, and localized AI tools.</p>
+        </section>
 
-            
-        
-
-        
-            System Architecture
-            Kanso Denki represents the intersection of robust C game programming, autonomous software engineering graphs, and localized AI tools.
-        
-
-        
-            Establish Connection
-            Secure lines are open. Transmit telemetry via standard communication protocols.
+        <section id="contact-content" class="page-content">
+            <h3 style="color: #ff5500;">Establish Connection</h3>
+            <p>Secure lines are open. Transmit telemetry via standard communication protocols.</p>
+        </section>
+    </main>
+</body>
+</html>
