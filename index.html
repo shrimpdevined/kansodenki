@@ -23,61 +23,55 @@
             overflow-x: hidden;
         }
 
-        header {
-            text-align: center;
-            padding-top: 120px; 
+        /* --- Top Bar Layout --- */
+        .top-bar {
+            display: flex;
+            align-items: flex-start; /* Aligns items to the top */
+            padding: 40px;
+            gap: 40px; /* Space between the menu and the title */
+            position: relative;
+            z-index: 10;
         }
 
         h1 {
-            font-size: 5rem;
+            font-size: 4.5rem;
             font-style: italic;
             font-weight: 900;
             text-transform: uppercase;
             color: #ffffff;
             text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff;
             letter-spacing: 5px;
+            /* Push the title down slightly to align with the center of the first hexagon */
+            margin-top: 10px; 
         }
 
         /* --- Hexagon Navigation Styles --- */
         
         .nav-wrapper {
-            position: absolute;
-            top: 40px;
-            left: 40px;
+            position: relative;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            padding: 0 50px 200px 0; 
+            /* The wrapper now tightly hugs the buttons, no invisible padding */
         }
 
-        /* 
-           The Wrapper handles the drop-shadow. 
-           We have to separate this from the clip-path, otherwise the clip-path 
-           will cut the shadow off entirely.
-        */
+        /* Increased size to fit full text */
         .hex-wrapper {
-            width: 100px;
-            height: 87px; /* Mathematically perfect 86.6% of width */
-            margin-bottom: 5px; /* Clean 5px gap between flat edges */
+            width: 120px;
+            height: 104px; /* Mathematically perfect 86.6% of 120px */
+            margin-bottom: 5px;
             text-decoration: none;
             
-            /* The --glow variable is driven by JavaScript. 
-               It scales the shadow radius and opacity based on mouse distance. */
             filter: drop-shadow(0 0 calc(2px + 20px * var(--glow, 0)) rgba(var(--rgb), calc(0.3 + 0.7 * var(--glow, 0))));
-            
-            /* Transition only transforms and opacity to avoid JS lag */
             transition: opacity 0.4s ease, transform 0.4s ease;
         }
 
-        /* The actual hexagon shape */
         .hex {
             width: 100%;
             height: 100%;
             clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
             
-            /* Semi-transparent base that gets slightly more opaque as it glows */
             background-color: rgba(var(--rgb), calc(0.15 + 0.35 * var(--glow, 0)));
-            backdrop-filter: blur(4px); /* Frosts the grid behind it */
+            backdrop-filter: blur(4px);
             
             display: flex;
             justify-content: center;
@@ -87,45 +81,45 @@
 
         .hex span {
             color: #ffffff;
-            /* Adds a hard glow to the text to ensure it remains readable */
             text-shadow: 0 0 5px rgba(var(--rgb), 1);
             font-size: 0.9rem;
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             pointer-events: none; 
         }
 
         .hex:hover {
-            transform: scale(1.05); /* Slight pop effect when directly hovering */
+            transform: scale(1.05); 
         }
 
         /* Sub-menu Container */
         .sub-menu {
+            /* Absolute positioning takes the hidden buttons out of the layout flow 
+               so they don't accidentally trigger the hover state early */
+            position: absolute;
+            top: 109px; /* Height of the main button (104px) + gap (5px) */
             display: flex;
             flex-direction: column;
         }
 
-        /* Sub-menu hiding logic */
         .sub-wrapper {
             opacity: 0;
             transform: translateY(-20px);
             pointer-events: none; 
         }
 
-        /* Staggered Delays for closing */
         .h1 { transition-delay: 0.2s; }
         .h2 { transition-delay: 0.1s; }
         .h3 { transition-delay: 0s; }
 
-        /* Trigger cascade when hovering the wrapper */
+        /* Trigger cascade ONLY when hovering the actual menu components */
         .nav-wrapper:hover .sub-wrapper {
             opacity: 1;
             transform: translateY(0);
             pointer-events: auto;
         }
 
-        /* Staggered Delays for opening */
         .nav-wrapper:hover .h1 { transition-delay: 0.1s; }
         .nav-wrapper:hover .h2 { transition-delay: 0.2s; }
         .nav-wrapper:hover .h3 { transition-delay: 0.3s; }
@@ -134,57 +128,54 @@
 </head>
 <body>
 
-    <!-- Top Left Interactive Menu -->
-    <nav class="nav-wrapper">
-        <!-- We use inline styles to assign RGB values for the glow variables -->
-        <div class="hex-wrapper main-wrapper" style="--rgb: 0, 255, 255;">
-            <div class="hex"><span>Menu</span></div>
-        </div>
+    <!-- Header containing Menu and Title Side-by-Side -->
+    <header class="top-bar">
         
-        <div class="sub-menu">
-            <a href="#projects" class="hex-wrapper sub-wrapper h1" style="--rgb: 255, 0, 85;">
-                <div class="hex"><span>Proj</span></div>
-            </a>
-            <a href="#about" class="hex-wrapper sub-wrapper h2" style="--rgb: 255, 255, 0;">
-                <div class="hex"><span>Abt</span></div>
-            </a>
-            <a href="#contact" class="hex-wrapper sub-wrapper h3" style="--rgb: 255, 85, 0;">
-                <div class="hex"><span>Cont</span></div>
-            </a>
-        </div>
-    </nav>
+        <!-- Interactive Menu -->
+        <nav class="nav-wrapper">
+            <div class="hex-wrapper main-wrapper" style="--rgb: 0, 255, 255;">
+                <div class="hex"><span>Menu</span></div>
+            </div>
+            
+            <div class="sub-menu">
+                <a href="#projects" class="hex-wrapper sub-wrapper h1" style="--rgb: 255, 0, 85;">
+                    <div class="hex"><span>Projects</span></div>
+                </a>
+                <a href="#about" class="hex-wrapper sub-wrapper h2" style="--rgb: 255, 255, 0;">
+                    <div class="hex"><span>About</span></div>
+                </a>
+                <a href="#contact" class="hex-wrapper sub-wrapper h3" style="--rgb: 255, 85, 0;">
+                    <div class="hex"><span>Contact</span></div>
+                </a>
+            </div>
+        </nav>
 
-    <!-- Main Content -->
-    <header>
+        <!-- Main Title -->
         <h1>Kanso Denki</h1>
+
     </header>
 
-    <!-- JavaScript for Proximity Glow -->
+    <!-- Proximity Glow Script -->
     <script>
         document.addEventListener('mousemove', (e) => {
             const wrappers = document.querySelectorAll('.hex-wrapper');
             
             wrappers.forEach(wrapper => {
-                // Find the center coordinates of each hexagon
                 const rect = wrapper.getBoundingClientRect();
                 const hexX = rect.left + rect.width / 2;
                 const hexY = rect.top + rect.height / 2;
                 
-                // Use Pythagorean theorem to find distance from mouse to center
                 const distX = e.clientX - hexX;
                 const distY = e.clientY - hexY;
                 const distance = Math.sqrt(distX * distX + distY * distY);
                 
-                // Max radius (in pixels) for the glow to begin
                 const maxDistance = 250; 
                 
-                // Calculate intensity (1 when touching, 0 when outside maxDistance)
                 let intensity = 0;
                 if (distance < maxDistance) {
                     intensity = 1 - (distance / maxDistance);
                 }
                 
-                // Push the intensity value back to CSS
                 wrapper.style.setProperty('--glow', intensity);
             });
         });
