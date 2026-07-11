@@ -1,7 +1,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Trebuchet MS', 'Lucida Sans', Arial, sans-serif; }
 
 body {
-    background-color: #111116; /* Darkened slightly for a premium contrast */
+    background-color: #111116; 
     background-image: 
         linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
@@ -14,7 +14,17 @@ body {
 }
 
 /* --- Top Bar & Layout --- */
-.top-bar { display: flex; align-items: center; padding: 40px; gap: 20px; position: relative; z-index: 10; }
+.top-bar { 
+    display: flex; 
+    align-items: center; 
+    padding: 40px; 
+    gap: 20px; 
+    position: relative; 
+    z-index: 10; 
+    /* Locks the top bar to the same centered 1200px grid as the content below */
+    max-width: 1200px; 
+    margin: 0 auto;
+}
 
 .title-wrapper {
     position: relative; display: flex; align-items: center;
@@ -121,7 +131,6 @@ body {
 .hex {
     position: relative; width: 100%; height: 100%;
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    /* REMOVED BACKDROP-FILTER FOR BUG FIX */
     display: flex; justify-content: center; align-items: center; transition: transform 0.15s ease;
 }
 
@@ -141,9 +150,20 @@ body {
 .nav-wrapper:hover .h1 { transition-delay: 0.1s; } .nav-wrapper:hover .h2 { transition-delay: 0.2s; } .nav-wrapper:hover .h3 { transition-delay: 0.3s; }
 
 /* --- Page Content Areas --- */
-.content-area { position: relative; padding: 0 40px 100px 40px; max-width: 1200px; margin: 20px auto 0; }
+.content-area { 
+    position: relative; 
+    padding: 0 0 100px 0; 
+    max-width: 1200px; 
+    margin: 0 auto 0; 
+}
+
 .page-content {
-    position: absolute; top: 0; left: 40px; right: 40px; opacity: 0; transform: translateY(20px);
+    position: absolute; 
+    top: 0; left: 0; right: 0;
+    /* Aligns exactly with Title: 40px base padding + 130px hex width + 20px gap */
+    margin-left: 190px; 
+    margin-right: 40px;
+    opacity: 0; transform: translateY(20px);
     transition: all 0.5s ease; pointer-events: none; color: rgba(255, 255, 255, 0.8);
     font-size: 1.2rem; line-height: 1.6;
 }
@@ -233,7 +253,6 @@ body {
     border: 1px solid rgba(var(--box-color), 0.4); 
     padding: 30px; 
     position: relative;
-    /* Cuts the corners off to look like a sci-fi UI panel */
     clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
     box-shadow: inset 0 0 20px rgba(var(--box-color), 0.1);
 }
@@ -258,7 +277,7 @@ body {
     color: rgb(var(--box-color)); 
     font-weight: bold; 
     margin-right: 15px; 
-    width: 100px; /* Aligns all the spec values nicely */
+    width: 100px; 
     flex-shrink: 0;
 }
 
@@ -328,10 +347,14 @@ body {
 .arch-row { margin-top: 35px; padding-top: 25px; border-top: 1px dashed #333; }
 .stat-val-arch { color: #00ffff; letter-spacing: 2px; font-weight: bold; font-size: 1.2rem; }
 
-/* Responsive Grid Fallback */
+/* Responsive Fallback for Small Screens */
 @media (max-width: 900px) {
     .clam-specs-grid { grid-template-columns: 1fr; }
     .clam-gallery { float: none; margin: 0 auto 40px auto; shape-outside: none; }
+    
+    /* Revert left margin on mobile so it doesn't squish text */
+    .page-content { margin-left: 30px; margin-right: 30px; }
+    .top-bar { padding: 30px; flex-direction: column; align-items: flex-start; }
 }
 
 
@@ -360,7 +383,6 @@ body {
     width: 100%;
     height: 100%;
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    /* REMOVED BACKDROP-FILTER FOR BUG FIX */
     transition: transform 0.15s ease;
     padding: 10px; 
 }
@@ -385,38 +407,29 @@ body {
    BUG FIXES & DYNAMIC HEXAGON GLOW
    ========================================= */
 
-/* 1. Force hardware acceleration to stop screen tearing */
 .hex-wrapper, .proj-hex-wrapper, .hex, .proj-hex {
     will-change: transform, filter;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
 }
 
-/* 2. Stop the inner hexagons from scaling (prevents edge-jitter) */
 .hex:hover, .proj-hex:hover { transform: none !important; }
 
-/* 3. Scale the wrappers and bring them to the front on hover */
 .hex-wrapper:hover, .proj-hex-wrapper:hover {
     transform: scale(1.05);
     z-index: 50;
 }
 
-/* 4. Fix Project Grid overlapping corners stealing mouse hovers */
 .projects-grid .proj-hex-wrapper { pointer-events: none; }
 .projects-grid .proj-hex { pointer-events: auto; }
 
-/* 5. Tame the INTERNAL background brightness */
 .hex, .proj-hex {
     background-color: rgba(var(--rgb), calc(0.05 + 0.1 * var(--glow, 0))) !important;
 }
 
-/* 6. Ensure the glitch text layer inside doesn't cause rendering confusion */
 .hex-content { transform: translateZ(0); }
 
-/* =========================================
-   PERFECT HEXAGON AURA (No Circles)
-   ========================================= */
-
+/* PERFECT HEXAGON AURA */
 .hex-wrapper, .proj-hex-wrapper {
     filter: 
         drop-shadow(2px 2px 0px var(--shadow-1)) 
