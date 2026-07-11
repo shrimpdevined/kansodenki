@@ -289,6 +289,13 @@ body {
 .hex-wrapper, .proj-hex-wrapper {
     filter: drop-shadow(2px 2px 0px var(--shadow-1)) drop-shadow(-2px -2px 0px var(--shadow-2)) !important;
 }
+
+/* 4. Tame the INTERNAL background brightness of the hexagons */
+.hex, .proj-hex {
+    /* Lowers the base transparency, and only lets it brighten slightly on hover */
+    background-color: rgba(var(--rgb), calc(0.05 + 0.1 * var(--glow, 0))) !important;
+}
+
 /* 2. Create a dedicated, bulletproof glow layer behind the hexagons. */
 .hex-wrapper::before, .proj-hex-wrapper::before {
     content: "";
