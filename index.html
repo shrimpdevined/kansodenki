@@ -23,57 +23,83 @@
             overflow-x: hidden;
         }
 
-        /* --- CRT Scanline Overlay --- */
-        body::after {
-            content: " ";
-            display: block;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            /* Creates the horizontal scanlines */
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
-            background-size: 100% 4px;
-            z-index: 999;
-            pointer-events: none; /* Lets you click *through* the scanlines */
-            animation: screenFlicker 0.15s infinite;
-        }
-
-        @keyframes screenFlicker {
-            0% { opacity: 0.95; }
-            50% { opacity: 1; }
-            100% { opacity: 0.95; }
-        }
-
         /* --- Top Bar Layout --- */
         .top-bar {
             display: flex;
-            align-items: flex-start;
+            align-items: center; /* Aligns menu and title perfectly on their horizontal center */
             padding: 40px;
             gap: 40px;
             position: relative;
             z-index: 10;
         }
 
-        h1 {
-            font-size: 5rem;
+        /* --- Title Styling & Containers --- */
+        .title-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Scanlines for the Title */
+        .title-wrapper::after {
+            content: " ";
+            position: absolute;
+            inset: -15px; /* Pulls the scanlines out slightly to cover the drop shadows */
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
+            background-size: 100% 4px;
+            pointer-events: none; 
+            animation: screenFlicker 0.15s infinite;
+            z-index: 20;
+        }
+
+        .ja-title {
+            font-size: 4.5rem;
             font-style: italic;
             font-weight: 900;
             color: #ffffff;
             text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff;
             letter-spacing: 5px;
-            margin-top: 10px; 
-            animation: textGlitch 3s infinite; /* Periodic CRT text glitch */
+            line-height: 1;
+            animation: titleGlitch 10s infinite; /* 10 second delay for less frequent glitches */
         }
 
-        /* Subtle randomized glitch for the title */
-        @keyframes textGlitch {
-            0%, 96% { opacity: 1; text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff; }
-            97% { opacity: 0.8; text-shadow: 6px 4px 0px #ff0055, -6px -4px 0px #00ffff; }
-            98% { opacity: 0.9; text-shadow: 2px 4px 0px #ff0055, -2px -4px 0px #00ffff; }
-            99% { opacity: 0.5; text-shadow: 8px 4px 0px #ff0055, -8px -4px 0px #00ffff; }
-            100% { opacity: 1; text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff; }
+        .en-title {
+            font-size: 1rem;
+            font-style: italic;
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff; /* Thinner shadow for small text */
+            letter-spacing: 12px;
+            margin-top: 8px;
+            margin-left: 5px;
+            animation: subTitleGlitch 10s infinite 0.1s; /* Slightly offset for a tearing effect */
+        }
+
+        /* --- Erratic Static Glitch Animations --- */
+        @keyframes titleGlitch {
+            0%, 93% { opacity: 1; transform: translate(0, 0) skew(0deg); text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff; }
+            94% { opacity: 0.8; transform: translate(-4px, 2px) skew(-5deg); text-shadow: -4px 4px 0px #ff0055, 6px -4px 0px #00ffff; }
+            95% { opacity: 0.4; transform: translate(4px, -2px) skew(5deg); text-shadow: 8px -2px 0px #ff0055, -8px 4px 0px #00ffff; }
+            96% { opacity: 1; transform: translate(-2px, -2px) skew(0deg); text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff; }
+            97% { opacity: 0.2; transform: translate(2px, 4px) skew(-10deg); text-shadow: -8px 6px 0px #ff0055, 8px -2px 0px #00ffff; }
+            98% { opacity: 0.9; transform: translate(-3px, -3px) skew(10deg); text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff; }
+            99% { opacity: 0.6; transform: translate(2px, 2px) skew(0deg); text-shadow: 6px -4px 0px #ff0055, -6px 4px 0px #00ffff; }
+            100% { opacity: 1; transform: translate(0, 0) skew(0deg); text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff; }
+        }
+
+        @keyframes subTitleGlitch {
+            0%, 93% { opacity: 1; transform: translate(0, 0) skew(0deg); text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff; }
+            94% { opacity: 0.5; transform: translate(3px, -1px) skew(5deg); text-shadow: -2px 4px 0px #ff0055, 4px -2px 0px #00ffff; }
+            95% { opacity: 0.8; transform: translate(-3px, 2px) skew(-5deg); text-shadow: 4px -2px 0px #ff0055, -4px 4px 0px #00ffff; }
+            96% { opacity: 0.2; transform: translate(-1px, 3px) skew(-10deg); text-shadow: -4px 2px 0px #ff0055, 4px -4px 0px #00ffff; }
+            97%, 100% { opacity: 1; transform: translate(0, 0) skew(0deg); text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff; }
+        }
+
+        @keyframes screenFlicker {
+            0% { opacity: 0.95; }
+            50% { opacity: 1; }
+            100% { opacity: 0.95; }
         }
 
         /* --- Hexagon Navigation Styles --- */
@@ -95,6 +121,7 @@
         }
 
         .hex {
+            position: relative;
             width: 100%;
             height: 100%;
             clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
@@ -108,20 +135,50 @@
             transition: transform 0.15s ease;
         }
 
-        .hex span {
-            color: #ffffff;
-            text-shadow: 0 0 5px rgba(var(--rgb), 1);
-            font-size: 0.9rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        /* Scanlines applied strictly inside the hexagon shape */
+        .hex::after {
+            content: " ";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%);
+            background-size: 100% 4px;
             pointer-events: none; 
+            animation: screenFlicker 0.15s infinite;
         }
 
         .hex:hover {
             transform: scale(1.05); 
         }
 
+        /* Text inside Hexagons */
+        .hex-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none; 
+            z-index: 2; /* Keeps text slightly above the scanline overlay */
+        }
+
+        .ja-text {
+            color: #ffffff;
+            text-shadow: 0 0 5px rgba(var(--rgb), 1);
+            font-size: 1.1rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            line-height: 1.2;
+        }
+
+        .en-text {
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 0 3px rgba(var(--rgb), 0.8);
+            font-size: 0.55rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* Sub-menu Hiding Logic */
         .sub-menu {
             position: absolute;
             top: 109px;
@@ -158,24 +215,47 @@
         <!-- Interactive Menu -->
         <nav class="nav-wrapper">
             <div class="hex-wrapper main-wrapper" style="--rgb: 0, 255, 255;">
-                <div class="hex"><span>Menu</span></div>
+                <div class="hex">
+                    <div class="hex-content">
+                        <span class="ja-text">メニュー</span>
+                        <span class="en-text">Menu</span>
+                    </div>
+                </div>
             </div>
             
             <div class="sub-menu">
                 <a href="#projects" class="hex-wrapper sub-wrapper h1" style="--rgb: 255, 0, 85;">
-                    <div class="hex"><span>Projects</span></div>
+                    <div class="hex">
+                        <div class="hex-content">
+                            <span class="ja-text">計画</span>
+                            <span class="en-text">Projects</span>
+                        </div>
+                    </div>
                 </a>
                 <a href="#about" class="hex-wrapper sub-wrapper h2" style="--rgb: 255, 255, 0;">
-                    <div class="hex"><span>About</span></div>
+                    <div class="hex">
+                        <div class="hex-content">
+                            <span class="ja-text">概要</span>
+                            <span class="en-text">About</span>
+                        </div>
+                    </div>
                 </a>
                 <a href="#contact" class="hex-wrapper sub-wrapper h3" style="--rgb: 255, 85, 0;">
-                    <div class="hex"><span>Contact</span></div>
+                    <div class="hex">
+                        <div class="hex-content">
+                            <span class="ja-text">通信</span>
+                            <span class="en-text">Contact</span>
+                        </div>
+                    </div>
                 </a>
             </div>
         </nav>
 
-        <!-- Main Title in Kanji -->
-        <h1>簡素電気</h1>
+        <!-- Japanese Title with Subtitle -->
+        <div class="title-wrapper">
+            <h1 class="ja-title">簡素電気</h1>
+            <h2 class="en-title">SIMPLE ELECTRIC</h2>
+        </div>
 
     </header>
 
