@@ -28,7 +28,7 @@
             display: flex;
             align-items: center; 
             padding: 40px;
-            gap: 40px;
+            gap: 20px; /* Brought the title much closer to the menu */
             position: relative;
             z-index: 10;
         }
@@ -37,11 +37,9 @@
         .title-wrapper {
             position: relative;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            align-items: center;
             
-            /* CSS Mask: Slices the scanlines directly into the text and shadow 
-               without creating any background outline box */
+            /* CSS Mask for the text scanlines */
             -webkit-mask-image: linear-gradient(rgba(0,0,0,1) 50%, rgba(0,0,0,0.6) 50%);
             -webkit-mask-size: 100% 4px;
             mask-image: linear-gradient(rgba(0,0,0,1) 50%, rgba(0,0,0,0.6) 50%);
@@ -50,12 +48,22 @@
             animation: screenFlicker 0.15s infinite;
         }
 
+        .main-title-group {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            z-index: 5; /* Keeps main title above the sliding page titles */
+            background-color: #1a1a24; /* Solid background blocks the sliding text from showing through */
+            padding-right: 15px; 
+        }
+
         .ja-title {
             font-size: 4.5rem;
             font-style: italic;
             font-weight: 900;
             color: #ffffff;
-            text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff;
+            /* Uses variables so the color can change per page */
+            text-shadow: 4px 4px 0px var(--shadow-1), -4px -4px 0px var(--shadow-2);
             letter-spacing: 5px;
             line-height: 1;
             margin: 0;
@@ -67,57 +75,71 @@
             font-style: italic;
             font-weight: 900;
             color: #ffffff;
-            text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff;
+            text-shadow: 2px 2px 0px var(--shadow-1), -2px -2px 0px var(--shadow-2);
             letter-spacing: 12px;
             margin: 8px 0 0 5px;
             animation: subTitleGlitch 20s infinite 0.1s; 
         }
 
-        /* --- Multi-Phase Glitch Cycle (16s stable, 4s of distinct variations) --- */
+        /* --- Sliding Page Titles --- */
+        .page-title {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            top: 50%;
+            left: 0;
+            /* Starts hidden behind the main title */
+            transform: translateY(-50%) translateX(20px); 
+            opacity: 0;
+            z-index: 1; 
+            transition: all 0.7s cubic-bezier(0.2, 1, 0.3, 1);
+            pointer-events: none;
+        }
+
+        .page-title.active {
+            opacity: 1;
+            left: 100%; /* Slides to the right edge of the main title */
+            transform: translateY(-50%) translateX(0px);
+        }
+
+        /* --- Dynamic Glitch Cycle using CSS Variables --- */
         @keyframes titleGlitch {
             0%, 82% { 
                 opacity: 1; transform: skew(0deg); filter: blur(0px);
-                text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff; 
+                text-shadow: 4px 4px 0px var(--shadow-1), -4px -4px 0px var(--shadow-2); 
             }
-            /* Variation 1: Color separation jitter */
-            83% { transform: translate(-2px, 1px); text-shadow: 8px -2px 0px #ff0055, -8px 4px 0px #00ffff; }
-            83.5% { transform: translate(2px, -1px); text-shadow: -4px 6px 0px #ff0055, 6px -2px 0px #00ffff; }
-            84% { transform: translate(0, 0); text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff; }
-
-            /* Variation 2: Magnetic skew and blur */
-            87% { transform: skew(15deg); filter: blur(1px); text-shadow: -10px 5px 0px #ff0055, 10px -5px 0px #00ffff; }
-            87.5% { opacity: 0.8; transform: skew(-10deg); filter: blur(2px); text-shadow: 12px -4px 0px #ff0055, -12px 6px 0px #00ffff; }
-            88% { opacity: 1; transform: skew(0deg); filter: blur(0px); text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff; }
-
-            /* Variation 3: Hard horizontal tear */
-            92% { transform: translate(-8px, 0); text-shadow: 15px 0px 0px #ff0055, -15px 0px 0px #00ffff; }
-            92.5% { transform: translate(8px, 0); text-shadow: -15px 0px 0px #ff0055, 15px 0px 0px #00ffff; }
-            93% { transform: translate(0, 0); text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff; }
-
-            /* Variation 4: Vertical bounce */
-            97% { transform: translate(0, 5px); text-shadow: 2px -4px 0px #ff0055, -2px 4px 0px #00ffff; }
-            97.5% { transform: translate(0, -3px); text-shadow: 6px 8px 0px #ff0055, -6px -8px 0px #00ffff; }
-            98%, 100% { opacity: 1; transform: translate(0, 0); text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff; }
+            83% { transform: translate(-2px, 1px); text-shadow: 8px -2px 0px var(--shadow-1), -8px 4px 0px var(--shadow-2); }
+            83.5% { transform: translate(2px, -1px); text-shadow: -4px 6px 0px var(--shadow-1), 6px -2px 0px var(--shadow-2); }
+            84% { transform: translate(0, 0); text-shadow: 4px 4px 0px var(--shadow-1), -4px -4px 0px var(--shadow-2); }
+            87% { transform: skew(15deg); filter: blur(1px); text-shadow: -10px 5px 0px var(--shadow-1), 10px -5px 0px var(--shadow-2); }
+            87.5% { opacity: 0.8; transform: skew(-10deg); filter: blur(2px); text-shadow: 12px -4px 0px var(--shadow-1), -12px 6px 0px var(--shadow-2); }
+            88% { opacity: 1; transform: skew(0deg); filter: blur(0px); text-shadow: 4px 4px 0px var(--shadow-1), -4px -4px 0px var(--shadow-2); }
+            92% { transform: translate(-8px, 0); text-shadow: 15px 0px 0px var(--shadow-1), -15px 0px 0px var(--shadow-2); }
+            92.5% { transform: translate(8px, 0); text-shadow: -15px 0px 0px var(--shadow-1), 15px 0px 0px var(--shadow-2); }
+            93% { transform: translate(0, 0); text-shadow: 4px 4px 0px var(--shadow-1), -4px -4px 0px var(--shadow-2); }
+            97% { transform: translate(0, 5px); text-shadow: 2px -4px 0px var(--shadow-1), -2px 4px 0px var(--shadow-2); }
+            97.5% { transform: translate(0, -3px); text-shadow: 6px 8px 0px var(--shadow-1), -6px -8px 0px var(--shadow-2); }
+            98%, 100% { opacity: 1; transform: translate(0, 0); text-shadow: 4px 4px 0px var(--shadow-1), -4px -4px 0px var(--shadow-2); }
         }
 
-        /* Scaled down version for the subtitle */
         @keyframes subTitleGlitch {
             0%, 82% { 
                 opacity: 1; transform: skew(0deg); filter: blur(0px);
-                text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff; 
+                text-shadow: 2px 2px 0px var(--shadow-1), -2px -2px 0px var(--shadow-2); 
             }
-            83% { transform: translate(-1px, 1px); text-shadow: 4px -1px 0px #ff0055, -4px 2px 0px #00ffff; }
-            83.5% { transform: translate(1px, -1px); text-shadow: -2px 3px 0px #ff0055, 3px -1px 0px #00ffff; }
-            84% { transform: translate(0, 0); text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff; }
-            87% { transform: skew(10deg); filter: blur(1px); text-shadow: -5px 2px 0px #ff0055, 5px -2px 0px #00ffff; }
-            87.5% { opacity: 0.8; transform: skew(-5deg); filter: blur(1.5px); text-shadow: 6px -2px 0px #ff0055, -6px 3px 0px #00ffff; }
-            88% { opacity: 1; transform: skew(0deg); filter: blur(0px); text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff; }
-            92% { transform: translate(-4px, 0); text-shadow: 8px 0px 0px #ff0055, -8px 0px 0px #00ffff; }
-            92.5% { transform: translate(4px, 0); text-shadow: -8px 0px 0px #ff0055, 8px 0px 0px #00ffff; }
-            93% { transform: translate(0, 0); text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff; }
-            97% { transform: translate(0, 3px); text-shadow: 1px -2px 0px #ff0055, -1px 2px 0px #00ffff; }
-            97.5% { transform: translate(0, -2px); text-shadow: 3px 4px 0px #ff0055, -3px -4px 0px #00ffff; }
-            98%, 100% { opacity: 1; transform: translate(0, 0); text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff; }
+            83% { transform: translate(-1px, 1px); text-shadow: 4px -1px 0px var(--shadow-1), -4px 2px 0px var(--shadow-2); }
+            83.5% { transform: translate(1px, -1px); text-shadow: -2px 3px 0px var(--shadow-1), 3px -1px 0px var(--shadow-2); }
+            84% { transform: translate(0, 0); text-shadow: 2px 2px 0px var(--shadow-1), -2px -2px 0px var(--shadow-2); }
+            87% { transform: skew(10deg); filter: blur(1px); text-shadow: -5px 2px 0px var(--shadow-1), 5px -2px 0px var(--shadow-2); }
+            87.5% { opacity: 0.8; transform: skew(-5deg); filter: blur(1.5px); text-shadow: 6px -2px 0px var(--shadow-1), -6px 3px 0px var(--shadow-2); }
+            88% { opacity: 1; transform: skew(0deg); filter: blur(0px); text-shadow: 2px 2px 0px var(--shadow-1), -2px -2px 0px var(--shadow-2); }
+            92% { transform: translate(-4px, 0); text-shadow: 8px 0px 0px var(--shadow-1), -8px 0px 0px var(--shadow-2); }
+            92.5% { transform: translate(4px, 0); text-shadow: -8px 0px 0px var(--shadow-1), 8px 0px 0px var(--shadow-2); }
+            93% { transform: translate(0, 0); text-shadow: 2px 2px 0px var(--shadow-1), -2px -2px 0px var(--shadow-2); }
+            97% { transform: translate(0, 3px); text-shadow: 1px -2px 0px var(--shadow-1), -1px 2px 0px var(--shadow-2); }
+            97.5% { transform: translate(0, -2px); text-shadow: 3px 4px 0px var(--shadow-1), -3px -4px 0px var(--shadow-2); }
+            98%, 100% { opacity: 1; transform: translate(0, 0); text-shadow: 2px 2px 0px var(--shadow-1), -2px -2px 0px var(--shadow-2); }
         }
 
         @keyframes screenFlicker {
@@ -127,22 +149,21 @@
         }
 
         /* --- Hexagon Navigation Styles --- */
-        
         .nav-wrapper {
             position: relative;
             display: flex;
             flex-direction: column;
+            z-index: 20; 
         }
 
-        /* Increased dimensions for larger text */
         .hex-wrapper {
             width: 130px; 
             height: 113px; 
             margin-bottom: 6px;
             text-decoration: none;
-            
             filter: drop-shadow(0 0 calc(2px + 20px * var(--glow, 0)) rgba(var(--rgb), calc(0.3 + 0.7 * var(--glow, 0))));
             transition: opacity 0.4s ease, transform 0.4s ease;
+            cursor: pointer;
         }
 
         .hex {
@@ -158,7 +179,6 @@
             transition: transform 0.15s ease;
         }
 
-        /* Scanlines applied strictly inside the hexagon shape */
         .hex::after {
             content: " ";
             position: absolute;
@@ -166,14 +186,12 @@
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%);
             background-size: 100% 4px;
             pointer-events: none; 
-            animation: screenFlicker 0.15s infinite; /* Re-added flicker to the menu */
+            animation: screenFlicker 0.15s infinite; 
         }
 
-        .hex:hover {
-            transform: scale(1.05); 
-        }
+        .hex:hover { transform: scale(1.05); }
 
-        /* Text inside Hexagons */
+        /* Menu text glitching effect */
         .hex-content {
             display: flex;
             flex-direction: column;
@@ -181,6 +199,14 @@
             justify-content: center;
             pointer-events: none; 
             z-index: 2; 
+            animation: menuGlitch 12s infinite;
+        }
+
+        @keyframes menuGlitch {
+            0%, 94% { transform: translate(0,0) skew(0deg); }
+            95% { transform: translate(-2px, 1px) skew(5deg); }
+            96% { transform: translate(2px, -1px) skew(-5deg); }
+            97%, 100% { transform: translate(0,0) skew(0deg); }
         }
 
         .ja-text {
@@ -202,7 +228,6 @@
             margin-top: 2px;
         }
 
-        /* Sub-menu Hiding Logic */
         .sub-menu {
             position: absolute;
             top: 119px; 
@@ -230,6 +255,43 @@
         .nav-wrapper:hover .h2 { transition-delay: 0.2s; }
         .nav-wrapper:hover .h3 { transition-delay: 0.3s; }
 
+        /* --- Page Content Areas --- */
+        .content-area {
+            position: relative;
+            padding: 0 40px;
+            max-width: 1000px;
+            margin-top: 20px;
+        }
+
+        .page-content {
+            position: absolute;
+            top: 0; left: 40px; right: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            pointer-events: none;
+            
+            /* Retro terminal styling for the text */
+            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        .page-content.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+            position: relative;
+        }
+
+        .page-content h3 {
+            color: #00ffff;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
     </style>
 </head>
 <body>
@@ -238,14 +300,15 @@
         
         <!-- Interactive Menu -->
         <nav class="nav-wrapper">
-            <div class="hex-wrapper main-wrapper" style="--rgb: 0, 255, 255;">
+            <!-- Main menu button returns you home -->
+            <a href="#home" class="hex-wrapper main-wrapper" style="--rgb: 0, 255, 255;">
                 <div class="hex">
                     <div class="hex-content">
                         <span class="ja-text">メニュー</span>
                         <span class="en-text">Menu</span>
                     </div>
                 </div>
-            </div>
+            </a>
             
             <div class="sub-menu">
                 <a href="#projects" class="hex-wrapper sub-wrapper h1" style="--rgb: 255, 0, 85;">
@@ -258,7 +321,7 @@
                 </a>
                 <a href="#about" class="hex-wrapper sub-wrapper h2" style="--rgb: 255, 255, 0;">
                     <div class="hex">
-                        <div class="hex-content">
+                        <div class="hex-content" style="animation-delay: 1s;">
                             <span class="ja-text">概要</span>
                             <span class="en-text">About</span>
                         </div>
@@ -266,7 +329,7 @@
                 </a>
                 <a href="#contact" class="hex-wrapper sub-wrapper h3" style="--rgb: 255, 85, 0;">
                     <div class="hex">
-                        <div class="hex-content">
+                        <div class="hex-content" style="animation-delay: 2s;">
                             <span class="ja-text">通信</span>
                             <span class="en-text">Contact</span>
                         </div>
@@ -275,16 +338,58 @@
             </div>
         </nav>
 
-        <!-- Japanese Title with Subtitle -->
+        <!-- Dynamic Title Container -->
         <div class="title-wrapper">
-            <h1 class="ja-title">簡素電気</h1>
-            <h2 class="en-title">SIMPLE ELECTRIC</h2>
-        </div>
+            <!-- Constant Main Title -->
+            <div class="main-title-group" style="--shadow-1: #ff0055; --shadow-2: #00ffff;">
+                <h1 class="ja-title">簡素電気</h1>
+                <h2 class="en-title">SIMPLE ELECTRIC</h2>
+            </div>
 
+            <!-- Hidden Titles that slide out based on the active page -->
+            <div class="page-title" id="projects-title" style="--shadow-1: #ff0055; --shadow-2: #00ffff;">
+                <h1 class="ja-title">計画</h1>
+                <h2 class="en-title">PROJECTS</h2>
+            </div>
+            
+            <div class="page-title" id="about-title" style="--shadow-1: #ffff00; --shadow-2: #ff0055;">
+                <h1 class="ja-title">概要</h1>
+                <h2 class="en-title">ABOUT</h2>
+            </div>
+
+            <div class="page-title" id="contact-title" style="--shadow-1: #ff5500; --shadow-2: #ffff00;">
+                <h1 class="ja-title">通信</h1>
+                <h2 class="en-title">CONTACT</h2>
+            </div>
+        </div>
     </header>
 
-    <!-- Proximity Glow Script -->
+    <!-- Main Content Area -->
+    <main class="content-area">
+        <section id="home-content" class="page-content active">
+            <h3>System Status: Online</h3>
+            <p>Welcome to the main terminal. Navigate using the hex interface above.</p>
+        </section>
+
+        <section id="projects-content" class="page-content">
+            <h3 style="color: #ff0055;">Active Operations</h3>
+            <p>C-based chunk engine development and real-world 3D photogrammetry scaling currently in progress. Accessing local LLM orchestration instances...</p>
+        </section>
+
+        <section id="about-content" class="page-content">
+            <h3 style="color: #ffff00;">System Architecture</h3>
+            <p>Kanso Denki represents the intersection of robust C game programming, autonomous software engineering graphs, and localized AI tools.</p>
+        </section>
+
+        <section id="contact-content" class="page-content">
+            <h3 style="color: #ff5500;">Establish Connection</h3>
+            <p>Secure lines are open. Transmit telemetry via standard communication protocols.</p>
+        </section>
+    </main>
+
+    <!-- Navigation & Glow Script -->
     <script>
+        // Handle proximity glow
         document.addEventListener('mousemove', (e) => {
             const wrappers = document.querySelectorAll('.hex-wrapper');
             
@@ -298,13 +403,33 @@
                 const distance = Math.sqrt(distX * distX + distY * distY);
                 
                 const maxDistance = 250; 
-                
                 let intensity = 0;
                 if (distance < maxDistance) {
                     intensity = 1 - (distance / maxDistance);
                 }
-                
                 wrapper.style.setProperty('--glow', intensity);
+            });
+        });
+
+        // Handle Single Page Navigation
+        document.querySelectorAll('.hex-wrapper').forEach(link => {
+            link.addEventListener('click', (e) => {
+                // Ignore empty links
+                const targetHref = link.getAttribute('href');
+                if (!targetHref || !targetHref.startsWith('#')) return;
+                
+                e.preventDefault();
+                const targetId = targetHref.substring(1); 
+                
+                // Hide all page content and show target
+                document.querySelectorAll('.page-content').forEach(section => section.classList.remove('active'));
+                const targetContent = document.getElementById(targetId + '-content');
+                if(targetContent) targetContent.classList.add('active');
+                
+                // Hide all sliding titles and show target
+                document.querySelectorAll('.page-title').forEach(title => title.classList.remove('active'));
+                const targetTitle = document.getElementById(targetId + '-title');
+                if(targetTitle) targetTitle.classList.add('active');
             });
         });
     </script>
