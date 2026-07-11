@@ -5,107 +5,135 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kanso Denki</title>
     <style>
-        /* Reset margins for a clean slate */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Trebuchet MS', 'Lucida Sans', Arial, sans-serif;
         }
 
         body {
-            /* A sleek dark mode background */
-            background-color: #121212; 
+            background-color: #1a1a24;
+            /* Subtle 80s retro grid background */
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
             color: #ffffff;
             height: 100vh;
             overflow-x: hidden;
         }
 
-        /* Center the main title */
         header {
             text-align: center;
-            padding-top: 100px; 
+            padding-top: 120px; 
         }
 
+        /* 80s Retro Racing Title */
         h1 {
-            font-size: 4rem;
-            letter-spacing: 5px;
-            font-weight: 300;
+            font-size: 5rem;
+            font-style: italic;
+            font-weight: 900;
             text-transform: uppercase;
+            color: #ffffff;
+            /* Stereoscopic neon shadow effect */
+            text-shadow: 
+                4px 4px 0px #ff0055, 
+                -4px -4px 0px #00ffff;
+            letter-spacing: 5px;
         }
 
         /* --- Hexagon Navigation Styles --- */
         
         .nav-wrapper {
             position: absolute;
-            top: 30px;
-            left: 30px;
+            top: 40px;
+            left: 40px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 20px; /* Space between hexagon and links */
+            /* Large padding area prevents the menu from closing if your mouse slips */
+            padding: 0 50px 200px 0; 
         }
 
-        .hex-button {
-            width: 60px;
-            height: 60px;
-            background-color: #00d2ff; /* Kanso Denki accent color */
-            /* This polygon draws the exact coordinates for a hexagon */
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        /* Base Hexagon Shape (Flat Top/Bottom) */
+        .hex {
+            width: 90px;
+            height: 78px; /* Slightly shorter than width to make a perfect hexagon */
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
             display: flex;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
-            transition: transform 0.4s ease;
-        }
-
-        .hex-button span {
-            color: #121212;
-            font-size: 0.75rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            transition: opacity 0.3s ease;
-        }
-
-        /* When the mouse hovers over the wrapper, rotate the hexagon */
-        .nav-wrapper:hover .hex-button {
-            transform: rotate(90deg);
-        }
-
-        /* Fade out the "Menu" text during rotation */
-        .nav-wrapper:hover .hex-button span {
-            opacity: 0; 
-        }
-
-        .nav-links {
-            list-style: none;
-            display: flex;
-            gap: 25px;
-            
-            /* Hide the links by default and shift them to the left */
-            opacity: 0;
-            transform: translateX(-30px);
-            transition: all 0.4s ease;
-            pointer-events: none; /* Prevents clicking invisible links */
-        }
-
-        /* When the wrapper is hovered, fade the links in and slide them right */
-        .nav-wrapper:hover .nav-links {
-            opacity: 1;
-            transform: translateX(0);
-            pointer-events: auto; 
-        }
-
-        .nav-links a {
-            color: #888888;
             text-decoration: none;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: color 0.2s ease;
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.2s ease, filter 0.2s ease;
         }
 
-        .nav-links a:hover {
-            color: #00d2ff; /* Matches the hexagon */
+        .hex span {
+            color: #111111;
+            font-size: 0.85rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            pointer-events: none; /* Prevents text from interfering with hover */
+        }
+
+        /* Main Menu Button */
+        .main-hex {
+            background-color: #00ffff; /* Neon Cyan */
+            z-index: 20; 
+        }
+
+        /* Sub-menu Container */
+        .sub-menu {
+            display: flex;
+            flex-direction: column;
+            /* Negative margin pulls them up to interlock like a honeycomb */
+            margin-top: -10px; 
+        }
+
+        .sub-hex {
+            margin-bottom: -10px; /* Interlock with siblings */
+            opacity: 0;
+            /* Start them shifted slightly up */
+            transform: translateY(-20px);
+            pointer-events: none; 
+        }
+
+        /* 80s Color Palette & Reverse Delays (for fading out) */
+        .hex-1 { 
+            background-color: #ff0055; /* Hot Pink */
+            transition: all 0.3s ease 0.2s; 
+        }
+        .hex-2 { 
+            background-color: #ffff00; /* Racing Yellow */
+            transition: all 0.3s ease 0.1s;
+        }
+        .hex-3 { 
+            background-color: #ff5500; /* Electric Orange */
+            transition: all 0.3s ease 0s;
+        }
+
+        /* --- Hover Animations --- */
+
+        /* Trigger cascade when hovering the wrapper */
+        .nav-wrapper:hover .sub-hex {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        /* Forward Delays (Top-down fade in on hover) */
+        .nav-wrapper:hover .hex-1 { transition-delay: 0.1s; }
+        .nav-wrapper:hover .hex-2 { transition-delay: 0.2s; }
+        .nav-wrapper:hover .hex-3 { transition-delay: 0.3s; }
+
+        /* Individual Hexagon Interaction */
+        .sub-hex:hover, .main-hex:hover {
+            transform: scale(1.05); /* Slight pop out instead of rotating */
+            filter: brightness(1.2);
+            z-index: 30; 
         }
     </style>
 </head>
@@ -113,14 +141,22 @@
 
     <!-- Top Left Interactive Menu -->
     <nav class="nav-wrapper">
-        <div class="hex-button">
+        <div class="hex main-hex">
             <span>Menu</span>
         </div>
-        <ul class="nav-links">
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
+        
+        <div class="sub-menu">
+            <!-- Using short text so it fits beautifully inside the shape -->
+            <a href="#projects" class="hex sub-hex hex-1">
+                <span>Proj</span>
+            </a>
+            <a href="#about" class="hex sub-hex hex-2">
+                <span>Abt</span>
+            </a>
+            <a href="#contact" class="hex sub-hex hex-3">
+                <span>Cont</span>
+            </a>
+        </div>
     </nav>
 
     <!-- Main Content -->
