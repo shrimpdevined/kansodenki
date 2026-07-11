@@ -33,32 +33,21 @@
             z-index: 10;
         }
 
-        /* --- Title Styling & True Text Scanlines --- */
+        /* --- Title Styling & Masked Scanlines --- */
         .title-wrapper {
             position: relative;
             display: flex;
             flex-direction: column;
             justify-content: center;
-        }
-
-        .ja-title, .en-title {
-            position: relative;
-            margin: 0;
-        }
-
-        /* This applies the scanlines ONLY inside the letters, removing the bounding box */
-        .ja-title::after, .en-title::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            color: transparent;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.45) 50%);
-            background-size: 100% 4px;
-            background-clip: text;
-            -webkit-background-clip: text;
-            pointer-events: none;
-            z-index: 5;
+            
+            /* CSS Mask: Slices the scanlines directly into the text and shadow 
+               without creating any background outline box */
+            -webkit-mask-image: linear-gradient(rgba(0,0,0,1) 50%, rgba(0,0,0,0.6) 50%);
+            -webkit-mask-size: 100% 4px;
+            mask-image: linear-gradient(rgba(0,0,0,1) 50%, rgba(0,0,0,0.6) 50%);
+            mask-size: 100% 4px;
+            
+            animation: screenFlicker 0.15s infinite;
         }
 
         .ja-title {
@@ -69,6 +58,7 @@
             text-shadow: 4px 4px 0px #ff0055, -4px -4px 0px #00ffff;
             letter-spacing: 5px;
             line-height: 1;
+            margin: 0;
             animation: titleGlitch 20s infinite; 
         }
 
@@ -79,9 +69,8 @@
             color: #ffffff;
             text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff;
             letter-spacing: 12px;
-            margin-top: 8px;
-            margin-left: 5px;
-            animation: subTitleGlitch 20s infinite 0.1s; /* Slightly offset from the main title */
+            margin: 8px 0 0 5px;
+            animation: subTitleGlitch 20s infinite 0.1s; 
         }
 
         /* --- Multi-Phase Glitch Cycle (16s stable, 4s of distinct variations) --- */
@@ -131,6 +120,12 @@
             98%, 100% { opacity: 1; transform: translate(0, 0); text-shadow: 2px 2px 0px #ff0055, -2px -2px 0px #00ffff; }
         }
 
+        @keyframes screenFlicker {
+            0% { opacity: 0.95; }
+            50% { opacity: 1; }
+            100% { opacity: 0.95; }
+        }
+
         /* --- Hexagon Navigation Styles --- */
         
         .nav-wrapper {
@@ -142,7 +137,7 @@
         /* Increased dimensions for larger text */
         .hex-wrapper {
             width: 130px; 
-            height: 113px; /* Mathematically scaled height */
+            height: 113px; 
             margin-bottom: 6px;
             text-decoration: none;
             
@@ -171,6 +166,7 @@
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%);
             background-size: 100% 4px;
             pointer-events: none; 
+            animation: screenFlicker 0.15s infinite; /* Re-added flicker to the menu */
         }
 
         .hex:hover {
@@ -190,7 +186,7 @@
         .ja-text {
             color: #ffffff;
             text-shadow: 0 0 5px rgba(var(--rgb), 1);
-            font-size: 1.4rem; /* Significantly larger */
+            font-size: 1.4rem; 
             font-weight: 900;
             letter-spacing: 2px;
             line-height: 1.1;
@@ -199,7 +195,7 @@
         .en-text {
             color: rgba(255, 255, 255, 0.95);
             text-shadow: 0 0 3px rgba(var(--rgb), 0.8);
-            font-size: 0.65rem; /* Larger */
+            font-size: 0.65rem; 
             font-weight: 800;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -209,7 +205,7 @@
         /* Sub-menu Hiding Logic */
         .sub-menu {
             position: absolute;
-            top: 119px; /* Main height (113) + margin (6) */
+            top: 119px; 
             display: flex;
             flex-direction: column;
         }
@@ -279,10 +275,10 @@
             </div>
         </nav>
 
-        <!-- Japanese Title with Subtitle - Using data-text for the scanline trick -->
+        <!-- Japanese Title with Subtitle -->
         <div class="title-wrapper">
-            <h1 class="ja-title" data-text="簡素電気">簡素電気</h1>
-            <h2 class="en-title" data-text="SIMPLE ELECTRIC">SIMPLE ELECTRIC</h2>
+            <h1 class="ja-title">簡素電気</h1>
+            <h2 class="en-title">SIMPLE ELECTRIC</h2>
         </div>
 
     </header>
