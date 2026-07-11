@@ -17,11 +17,11 @@ body {
 .top-bar { 
     display: flex; 
     align-items: center; 
-    padding: 40px; 
+    padding: 40px 20px; 
+    /* Gap is calibrated to push the title over to exactly match the centered content below */
     gap: 20px; 
     position: relative; 
     z-index: 10; 
-    /* Locks the top bar to the same centered 1200px grid as the content below */
     max-width: 1200px; 
     margin: 0 auto;
 }
@@ -121,7 +121,14 @@ body {
 @keyframes screenFlicker { 0% { opacity: 0.95; } 50% { opacity: 1; } 100% { opacity: 0.95; } }
 
 /* --- Navigation Hexagons --- */
-.nav-wrapper { position: relative; display: flex; flex-direction: column; z-index: 20; }
+.nav-wrapper { 
+    position: relative; 
+    display: flex; 
+    flex-direction: column; 
+    z-index: 20; 
+    /* Pulls the main menu out to the left to create the perfect padding gap */
+    margin-left: -30px; 
+}
 
 .hex-wrapper {
     width: 130px; height: 113px; margin-bottom: 6px; text-decoration: none;
@@ -152,17 +159,19 @@ body {
 /* --- Page Content Areas --- */
 .content-area { 
     position: relative; 
-    padding: 0 0 100px 0; 
+    padding: 0 20px 100px 20px; 
     max-width: 1200px; 
-    margin: 0 auto 0; 
+    margin: 0 auto; 
 }
 
 .page-content {
     position: absolute; 
     top: 0; left: 0; right: 0;
-    /* Aligns exactly with Title: 40px base padding + 130px hex width + 20px gap */
-    margin-left: 190px; 
-    margin-right: 40px;
+    /* Centers the content within the 1200px boundary. 
+       This perfectly aligns the left edge of the text with the Title above it! */
+    max-width: 960px; 
+    margin: 0 auto;
+    
     opacity: 0; transform: translateY(20px);
     transition: all 0.5s ease; pointer-events: none; color: rgba(255, 255, 255, 0.8);
     font-size: 1.2rem; line-height: 1.6;
@@ -206,7 +215,6 @@ body {
     height: 325px; 
     position: relative; 
     margin: 0 0 30px 40px; 
-    /* The magic CSS that lets text mold into the jagged shape */
     shape-outside: polygon(0 0, 45% 0, 100% 25%, 100% 75%, 45% 100%, 0 100%);
 }
 
@@ -217,11 +225,8 @@ body {
     position: absolute !important; 
     margin: 0 !important; 
 }
-/* Top Left */
 .clam-hex:nth-child(1) { top: 0; left: 0; }
-/* Middle Right (Interlocked) */
 .clam-hex:nth-child(2) { top: 82px; left: 140px; }
-/* Bottom Left */
 .clam-hex:nth-child(3) { top: 164px; left: 0; }
 
 .hex-img-text { 
@@ -244,10 +249,9 @@ body {
     grid-template-columns: 1fr 1fr; 
     gap: 40px; 
     margin-bottom: 80px; 
-    clear: both; /* Ensures it pushes below the floated cluster */
+    clear: both; 
 }
 
-/* Sleek chamfered glass panels */
 .spec-box { 
     background: linear-gradient(135deg, rgba(var(--box-color), 0.1) 0%, rgba(0,0,0,0.5) 100%);
     border: 1px solid rgba(var(--box-color), 0.4); 
@@ -347,16 +351,6 @@ body {
 .arch-row { margin-top: 35px; padding-top: 25px; border-top: 1px dashed #333; }
 .stat-val-arch { color: #00ffff; letter-spacing: 2px; font-weight: bold; font-size: 1.2rem; }
 
-/* Responsive Fallback for Small Screens */
-@media (max-width: 900px) {
-    .clam-specs-grid { grid-template-columns: 1fr; }
-    .clam-gallery { float: none; margin: 0 auto 40px auto; shape-outside: none; }
-    
-    /* Revert left margin on mobile so it doesn't squish text */
-    .page-content { margin-left: 30px; margin-right: 30px; }
-    .top-bar { padding: 30px; flex-direction: column; align-items: flex-start; }
-}
-
 
 /* --- Products Grid (Interlocking Honeycomb) --- */
 .projects-grid {
@@ -393,7 +387,6 @@ body {
     z-index: 0;
 }
 
-/* CSS Text Wrapping */
 .shape-left { float: left; width: 25%; height: 100%; shape-outside: polygon(0 0, 100% 50%, 0 100%); }
 .shape-right { float: right; width: 25%; height: 100%; shape-outside: polygon(100% 0, 0 50%, 100% 100%); }
 
@@ -435,4 +428,16 @@ body {
         drop-shadow(2px 2px 0px var(--shadow-1)) 
         drop-shadow(-2px -2px 0px var(--shadow-2)) 
         drop-shadow(0px 0px calc(2px + 15px * var(--glow, 0)) rgba(var(--rgb), calc(0.1 + 0.8 * var(--glow, 0)))) !important;
+}
+
+
+/* Responsive Fallback for Mobile Screens */
+@media (max-width: 900px) {
+    .clam-specs-grid { grid-template-columns: 1fr; }
+    .clam-gallery { float: none; margin: 0 auto 40px auto; shape-outside: none; }
+    
+    .top-bar { padding: 30px 20px; flex-direction: column; align-items: flex-start; gap: 20px; }
+    .nav-wrapper { margin-left: 0; }
+    
+    .page-content { max-width: 100%; margin: 0; padding: 0 20px; }
 }
