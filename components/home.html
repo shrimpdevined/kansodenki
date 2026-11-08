@@ -1,0 +1,85 @@
+<!-- HOME PAGE: CLAM TERMINAL -->
+<div class="clam-header">
+    <h2 class="cyber-title">C.L.A.M. // MICRO-TERMINAL</h2>
+    <p class="cyber-subtitle">Credit-Card Footprint. Unrestricted Logic.</p>
+</div>
+
+<!-- Hexagon Image Placeholders (Safely Clamped Inside Page Boundary) -->
+<div class="clam-showcase-row">
+    <div class="clam-gallery">
+        <div class="proj-hex-wrapper clam-hex" style="--rgb: 0, 255, 255; --shadow-1: #ff0055; --shadow-2: #00ffff;">
+            <div class="proj-hex"><div class="hex-img-text">IMG_01</div></div>
+        </div>
+        <div class="proj-hex-wrapper clam-hex" style="--rgb: 255, 0, 85; --shadow-1: #00ffff; --shadow-2: #ff0055;">
+            <div class="proj-hex"><div class="hex-img-text">IMG_02</div></div>
+        </div>
+        <div class="proj-hex-wrapper clam-hex" style="--rgb: 255, 255, 0; --shadow-1: #ff0055; --shadow-2: #ffff00;">
+            <div class="proj-hex"><div class="hex-img-text">IMG_03</div></div>
+        </div>
+    </div>
+    
+    <p class="clam-desc">
+        The CLAM is an ultra-portable cyber-deck designed to bridge the gap between raw hardware engineering and software mastery. Smaller than an iPhone Max, it deploys instantly from your pocket as a dedicated writer, autonomous coding environment, and raw Linux terminal.
+    </p>
+</div>
+
+<!-- Specs Grid -->
+<div class="clam-specs-grid">
+    <div class="spec-box" style="--box-color: 0, 255, 255;">
+        <h3>[ CLAM.HARDWARE_SPECS ]</h3>
+        <ul>
+            <li><span class="hl">DISPLAY:</span> 3.5" TFT Capacitive Touch (480x320 Landscape)</li>
+            <li><span class="hl">INPUT:</span> Custom Card KB Driver</li>
+            <li><span class="hl">AUDIO:</span> TLV320DAC3100 / 3.5mm Jack & Int. Speaker</li>
+            <li><span class="hl">POWER:</span> 2500mAh Li-Po + Custom Charge Board</li>
+            <li><span class="hl">STORAGE:</span> Micro SD Slot (32GB Included)</li>
+            <li><span class="hl">OS:</span> Debian Linux (Custom Image)</li>
+        </ul>
+    </div>
+    <div class="spec-box" style="--box-color: 255, 0, 85;">
+        <h3>[ RPi_ZERO_2.BASELINE ]</h3>
+        <ul>
+            <li><span class="hl">CPU:</span> 1GHz Quad-core 64-bit ARM Cortex-A53</li>
+            <li><span class="hl">RAM:</span> 512MB LPDDR2 SDRAM</li>
+            <li><span class="hl">WIFI:</span> 802.11 b/g/n Wireless LAN</li>
+            <li><span class="hl">BLUETOOTH:</span> BT 4.2, BLE</li>
+            <li><span class="hl">VIDEO:</span> Mini HDMI / 1080p60</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Interactive Comparison Tool -->
+<div class="clam-interactive">
+    <h3 class="interactive-title">/// CORE_TELEMETRY.MATRIX</h3>
+    <p>The CLAM architecture supports interchangeable compute cores. Interrogate the performance deltas below.</p>
+    
+    <div class="comp-widget">
+        <div class="comp-tabs">
+            <button class="comp-tab active" data-board="pico1">PICO 1</button>
+            <button class="comp-tab" data-board="pico2">PICO 2</button>
+            <button class="comp-tab" data-board="zero1">ZERO 1</button>
+            <button class="comp-tab" data-board="zero2">ZERO 2</button>
+        </div>
+        <div class="comp-display">
+            <div class="stat-row">
+                <span class="stat-label">CLOCK.SPD</span>
+                <div class="bar-bg"><div class="bar-fill" id="bar-cpu" style="width: 13%; background: #00ffff;"></div></div>
+                <span class="stat-val" id="val-cpu">133 MHz</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">MEM.ALLOC</span>
+                <div class="bar-bg"><div class="bar-fill" id="bar-ram" style="width: 2%; background: #ff0055;"></div></div>
+                <span class="stat-val" id="val-ram">264 KB</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">PWR.EFFIC</span>
+                <div class="bar-bg"><div class="bar-fill" id="bar-eff" style="width: 100%; background: #ffff00;"></div></div>
+                <span class="stat-val" id="val-eff">EXTREME</span>
+            </div>
+            <div class="stat-row arch-row">
+                <span class="stat-label">SYS.ARCHI</span>
+                <span class="stat-val-arch" id="val-arch">Cortex-M0+ (Microcontroller)</span>
+            </div>
+        </div>
+    </div>
+</div>
