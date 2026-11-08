@@ -56,12 +56,24 @@
     padding-right: 15px;
     flex-shrink: 0;
 }
-
 .slide-title-group {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    text-align: center;
     flex-shrink: 0;
+}
+
+.slide-title-group .ja-title {
+    /* Offsets trailing 5px letter-spacing so the Kanji block centers cleanly */
+    margin-right: -25px;
+}
+
+.slide-title-group .en-title {
+    /* Removes the left-aligned offset and compensates for trailing letter-spacing */
+    margin: 1px -15px -6px -15px;
+    padding-left: calc(15px + clamp(8px, 1.4vw, 14px));
 }
 
 /* The > Separator between 簡素電気 and the Page Title */
