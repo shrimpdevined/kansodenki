@@ -4,26 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Kanso Denki - CLAM</title>
-    <!-- Master CSS loader -->
     <link rel="stylesheet" href="./style.css">
     <script src="./script.js" defer></script>
 </head>
 <body>
-    <div class="site-layout">
-        <!-- Column 1: Navigation Sidebar / Dropdown Area -->
-        <aside class="sidebar-slot" id="slot-nav"></aside>
+    <!-- Top Bar: Nav Slot and Header Title aligned side-by-side as originally positioned -->
+    <header class="top-bar">
+        <div id="slot-nav"></div>
+        <div id="slot-header"></div>
+    </header>
 
-        <!-- Column 2: Main Area (Header aligned with Content) -->
-        <div class="main-column">
-            <header class="header-slot" id="slot-header"></header>
-            
-            <main class="content-area">
-                <section id="home-content" class="page-content" data-component="./components/home.html"></section>
-                <section id="products-content" class="page-content" data-component="./components/products.html"></section>
-                <section id="about-content" class="page-content" data-component="./components/about.html"></section>
-                <section id="contact-content" class="page-content" data-component="./components/contact.html"></section>
-            </main>
-        </div>
-    </div>
+    <!-- Main Content Area: Offset so the left side remains empty for the dropdown -->
+    <main class="content-area">
+        <section id="home-content" class="page-content" data-component="./components/home.html"></section>
+        <section id="products-content" class="page-content" data-component="./components/products.html"></section>
+        <section id="about-content" class="page-content" data-component="./components/about.html"></section>
+        <section id="contact-content" class="page-content" data-component="./components/contact.html"></section>
+    </main>
 </body>
 </html>
