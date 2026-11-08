@@ -4,7 +4,7 @@
     position: relative;
     z-index: 10;
     margin-bottom: 0;
-    height: 113px; /* Matches .hex-wrapper height */
+    height: 113px;
 }
 
 .title-wrapper {
@@ -48,9 +48,11 @@
     color: #ffffff;
     text-shadow: 2px 2px 0px var(--shadow-1), -2px -2px 0px var(--shadow-2);
     letter-spacing: clamp(8px, 1.4vw, 14px);
-    margin: 0 0 2px 6px;
-    line-height: 1;
+    margin: 0 0 0 6px;
+    line-height: 0.8;
     white-space: nowrap;
+    position: relative;
+    top: 6px; /* Offsets font descender space to seat baseline flush on bottom edge */
     animation: subTitleGlitch 20s infinite 0.1s; 
 }
 
