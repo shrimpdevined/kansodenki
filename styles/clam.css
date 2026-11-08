@@ -22,26 +22,26 @@
     margin-top: 8px; 
 }
 
-/* Honeycomb cluster floated on the right side */
+/* Honeycomb cluster floated safely on the right side */
 .clam-gallery { 
     float: right; 
-    width: 320px; 
-    height: 330px; 
+    width: 310px; 
+    height: 325px; 
     position: relative; 
-    margin: 0 15px 30px 40px; 
+    margin: 0 10px 30px 35px; 
     shape-outside: polygon(0 0, 45% 0, 100% 25%, 100% 75%, 45% 100%, 0 100%);
 }
 
 .clam-hex { 
-    width: 175px; 
-    height: 152px; 
+    width: 170px; 
+    height: 147px; 
     position: absolute !important; 
     margin: 0 !important; 
 }
 
 .clam-hex:nth-child(1) { top: 0; left: 0; }
-.clam-hex:nth-child(2) { top: 76px; left: 130px; }
-.clam-hex:nth-child(3) { top: 152px; left: 0; }
+.clam-hex:nth-child(2) { top: 74px; left: 125px; }
+.clam-hex:nth-child(3) { top: 148px; left: 0; }
 
 .hex-img-text { 
     display: flex;
@@ -61,7 +61,7 @@
     text-align: justify;
 }
 
-/* Specs Grid - Clears the float so it always sits beneath the gallery and description */
+/* Specs Grid - Clears float cleanly */
 .clam-specs-grid { 
     clear: both;
     display: grid; 
