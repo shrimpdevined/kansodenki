@@ -1,9 +1,9 @@
-// --- URL Resolver: Ensures paths resolve across custom domains, subpaths, and live hosts ---
+// --- URL Resolver: Ensures paths resolve across custom domains and subpaths ---
 function getComponentUrl(relativePath) {
     return new URL(relativePath, window.location.href).href;
 }
 
-// --- Component Loader with Visual Diagnostic Fallback ---
+// --- Component Loader ---
 async function loadComponent(targetSelector, relativePath) {
     const el = document.querySelector(targetSelector);
     if (!el) {
@@ -18,19 +18,18 @@ async function loadComponent(targetSelector, relativePath) {
         if (!res.ok) {
             throw new Error(`HTTP ${res.status} (${res.statusText || 'Not Found'})`);
         }
-        const html = await res.responseText();
+        // Modern fetch uses .text(), not .responseText()
+        const html = await res.text();
         el.innerHTML = html;
         return true;
     } catch (err) {
         console.error(`[Component Error] Failed to load "${relativePath}":`, err);
 
-        // Visual on-screen diagnostic box
         el.innerHTML = `
             <div style="border: 1px solid #ff0055; background: rgba(255,0,85,0.15); color: #ff0055; padding: 16px; margin: 10px 0; font-family: monospace; font-size: 13px; line-height: 1.5; border-radius: 4px;">
                 <strong style="color: #00ffff;">[KANSO_LOAD_ERROR]</strong> Failed to load component: <code>${relativePath}</code><br>
                 <strong>Requested URL:</strong> <code>${fullUrl}</code><br>
-                <strong>Error:</strong> ${err.message}<br>
-                ${window.location.protocol === 'file:' ? '<br><span style="color:#ffff00;">⚠️ Local file detection: Modern browsers block fetch() over <code>file:///</code>. Run a local web server (e.g., VS Code Live Server) or view on your GitHub Pages URL.</span>' : ''}
+                <strong>Error:</strong> ${err.message}
             </div>
         `;
         return false;
