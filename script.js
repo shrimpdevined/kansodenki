@@ -153,22 +153,19 @@ document.addEventListener('touchmove', (e) => {
     }
 }, { passive: true });
 
-// --- Synchronized Application Bootstrap ---
+// --- Bootstrapping ---
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Fetch persistent structural components concurrently
     await Promise.all([
         loadComponent('#slot-nav', './components/nav.html'),
         loadComponent('#slot-header', './components/header.html')
     ]);
 
-    // 2. Fetch all individual page section contents
     const pageSlots = Array.from(document.querySelectorAll('.page-content[data-component]'));
     await Promise.all(pageSlots.map(slot => {
         const file = slot.getAttribute('data-component');
         return loadComponent(`#${slot.id}`, file);
     }));
 
-    // 3. Initialize dynamic listeners once DOM is populated
     initMobileMenu();
     initTelemetryWidget();
     navigateToHash();
