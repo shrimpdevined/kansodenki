@@ -3,12 +3,12 @@ async function loadComponent(targetSelector, fileUrl) {
     const el = document.querySelector(targetSelector);
     if (!el) return false;
     try {
-        const res = await fetch(fileUrl);
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        const res = await fetch(fileUrl, { cache: 'no-cache' });
+        if (!res.ok) throw new Error(`HTTP ${res.status} on ${fileUrl}`);
         el.innerHTML = await res.responseText();
         return true;
     } catch (err) {
-        console.error(`Failed to load component ${fileUrl}:`, err);
+        console.error(`Error loading ${fileUrl}:`, err);
         return false;
     }
 }
@@ -62,9 +62,10 @@ const telemetryData = {
 };
 
 function initTelemetryWidget() {
-    document.querySelectorAll('.comp-tab').forEach(tab => {
+    const tabs = document.querySelectorAll('.comp-tab');
+    tabs.forEach(tab => {
         tab.addEventListener('click', (e) => {
-            document.querySelectorAll('.comp-tab').forEach(t => t.classList.remove('active'));
+            tabs.forEach(t => t.classList.remove('active'));
             e.currentTarget.classList.add('active');
 
             const board = e.currentTarget.getAttribute('data-board');
@@ -148,13 +149,13 @@ document.addEventListener('mousemove', (e) => {
 });
 
 document.addEventListener('touchmove', (e) => {
-    if (e.touches.length > 0) {
+    if (e.touches && e.touches.length > 0) {
         updateGlowPosition(e.touches[0].clientX, e.touches[0].clientY);
     }
 }, { passive: true });
 
-// --- Bootstrapping ---
-document.addEventListener('DOMContentLoaded', async () => {
+// --- Safe Bootstrapping (Runs immediately if DOM is ready) ---
+async function bootstrap() {
     await Promise.all([
         loadComponent('#slot-nav', './components/nav.html'),
         loadComponent('#slot-header', './components/header.html')
@@ -169,4 +170,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     initMobileMenu();
     initTelemetryWidget();
     navigateToHash();
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootstrap);
+} else {
+    bootstrap();
+}
