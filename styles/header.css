@@ -1,9 +1,9 @@
 .header-slot {
     display: flex;
     align-items: center;
-    margin-bottom: 35px;
     position: relative;
     z-index: 10;
+    margin-bottom: 0;
 }
 
 .title-wrapper {
@@ -18,9 +18,9 @@
 }
 
 .main-title-group {
+    position: relative;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    align-items: center;
     z-index: 5;
     background-color: #111116;
     padding-right: 20px;
@@ -38,7 +38,11 @@
     animation: titleGlitch 20s infinite; 
 }
 
+/* Positioned beneath .ja-title without adding height to the vertical center line */
 .en-title {
+    position: absolute;
+    top: 100%;
+    left: 0;
     font-size: clamp(0.7rem, 1.4vw, 0.95rem);
     font-style: italic;
     font-weight: 900;
@@ -46,14 +50,14 @@
     text-shadow: 2px 2px 0px var(--shadow-1), -2px -2px 0px var(--shadow-2);
     letter-spacing: clamp(6px, 1.2vw, 12px);
     margin: 8px 0 0 5px;
+    white-space: nowrap;
     animation: subTitleGlitch 20s infinite 0.1s; 
 }
 
 .page-title {
     position: absolute;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    align-items: center;
     top: 50%;
     left: 0;
     transform: translateY(-50%) translateX(20px);
