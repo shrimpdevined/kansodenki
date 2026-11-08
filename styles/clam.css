@@ -22,39 +22,26 @@
     margin-top: 8px; 
 }
 
-.clam-showcase-row {
-    display: flex;
-    flex-wrap: wrap-reverse;
-    gap: 30px;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 50px;
-}
-
-.clam-desc { 
-    flex: 1 1 380px;
-    font-size: 1.25rem; 
-    line-height: 1.9; 
-    color: rgba(255, 255, 255, 0.9); 
-}
-
+/* Honeycomb cluster floated on the right side */
 .clam-gallery { 
-    flex: 0 0 310px;
-    height: 310px; 
+    float: right; 
+    width: 320px; 
+    height: 330px; 
     position: relative; 
-    margin-right: 15px;
+    margin: 0 15px 30px 40px; 
+    shape-outside: polygon(0 0, 45% 0, 100% 25%, 100% 75%, 45% 100%, 0 100%);
 }
 
 .clam-hex { 
-    width: 170px; 
-    height: 147px; 
+    width: 175px; 
+    height: 152px; 
     position: absolute !important; 
     margin: 0 !important; 
 }
 
 .clam-hex:nth-child(1) { top: 0; left: 0; }
-.clam-hex:nth-child(2) { top: 74px; left: 125px; }
-.clam-hex:nth-child(3) { top: 148px; left: 0; }
+.clam-hex:nth-child(2) { top: 76px; left: 130px; }
+.clam-hex:nth-child(3) { top: 152px; left: 0; }
 
 .hex-img-text { 
     display: flex;
@@ -66,7 +53,17 @@
     color: rgba(255,255,255,0.6); 
 }
 
+.clam-desc { 
+    font-size: 1.25rem; 
+    line-height: 1.9; 
+    margin-bottom: 50px; 
+    color: rgba(255, 255, 255, 0.9); 
+    text-align: justify;
+}
+
+/* Specs Grid - Clears the float so it always sits beneath the gallery and description */
 .clam-specs-grid { 
+    clear: both;
     display: grid; 
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
     gap: 30px; 
@@ -114,6 +111,7 @@
     flex-shrink: 0;
 }
 
+/* Interactive Dashboard */
 .clam-interactive {
     margin-bottom: 60px;
     width: 100%;
@@ -227,7 +225,11 @@
 }
 
 @media (max-width: 900px) {
-    .clam-gallery { margin: 0 auto; }
+    .clam-gallery { 
+        float: none; 
+        margin: 0 auto 30px auto; 
+        shape-outside: none; 
+    }
     .stat-row:not(.arch-row) { flex-wrap: wrap; gap: 8px; }
     .bar-bg { order: 3; width: 100%; margin: 5px 0 0 0; }
     .stat-val { text-align: right; margin-left: auto; }
