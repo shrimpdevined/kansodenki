@@ -1,13 +1,15 @@
 // --- Component Loader ---
 async function loadComponent(targetSelector, fileUrl) {
     const el = document.querySelector(targetSelector);
-    if (!el) return;
+    if (!el) return false;
     try {
         const res = await fetch(fileUrl);
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         el.innerHTML = await res.responseText();
+        return true;
     } catch (err) {
         console.error(`Failed to load component ${fileUrl}:`, err);
+        return false;
     }
 }
 
@@ -94,7 +96,7 @@ function initMobileMenu() {
     const mainMenuBtn = document.querySelector('.main-wrapper');
 
     if (mainMenuBtn && navWrapper) {
-        mainMenuBtn.addEventListener('click', (e) => {
+        mainMenuBtn.addEventListener('click', () => {
             if (window.innerWidth <= 900) {
                 navWrapper.classList.toggle('menu-open');
             }
@@ -151,9 +153,9 @@ document.addEventListener('touchmove', (e) => {
     }
 }, { passive: true });
 
-// --- Orchestrate Initialization ---
+// --- Synchronized Application Bootstrap ---
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Fetch persistent structural components
+    // 1. Fetch persistent structural components concurrently
     await Promise.all([
         loadComponent('#slot-nav', './components/nav.html'),
         loadComponent('#slot-header', './components/header.html')
@@ -166,7 +168,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return loadComponent(`#${slot.id}`, file);
     }));
 
-    // 3. Initialize dynamic listeners
+    // 3. Initialize dynamic listeners once DOM is populated
     initMobileMenu();
     initTelemetryWidget();
     navigateToHash();
