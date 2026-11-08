@@ -60,6 +60,14 @@ function navigateToHash() {
     if (targetTitle) {
         targetTitle.classList.add('active');
     }
+
+    document.querySelectorAll('.header-bar').forEach(bar => {
+        bar.classList.remove('active');
+    });
+    const targetBar = document.getElementById(pageId + '-bar');
+    if (targetBar) {
+        targetBar.classList.add('active');
+    }
 }
 
 window.addEventListener('hashchange', navigateToHash);
