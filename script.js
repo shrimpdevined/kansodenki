@@ -1,34 +1,66 @@
-// --- Component Loader ---
-async function loadComponent(targetSelector, fileUrl) {
+// --- URL Resolver: Ensures paths resolve across custom domains, subpaths, and live hosts ---
+function getComponentUrl(relativePath) {
+    return new URL(relativePath, window.location.href).href;
+}
+
+// --- Component Loader with Visual Diagnostic Fallback ---
+async function loadComponent(targetSelector, relativePath) {
     const el = document.querySelector(targetSelector);
-    if (!el) return false;
+    if (!el) {
+        console.error(`Target selector "${targetSelector}" not found in DOM.`);
+        return false;
+    }
+
+    const fullUrl = getComponentUrl(relativePath);
+
     try {
-        const res = await fetch(fileUrl, { cache: 'no-cache' });
-        if (!res.ok) throw new Error(`HTTP ${res.status} on ${fileUrl}`);
-        el.innerHTML = await res.responseText();
+        const res = await fetch(fullUrl, { cache: 'no-cache' });
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status} (${res.statusText || 'Not Found'})`);
+        }
+        const html = await res.responseText();
+        el.innerHTML = html;
         return true;
     } catch (err) {
-        console.error(`Error loading ${fileUrl}:`, err);
+        console.error(`[Component Error] Failed to load "${relativePath}":`, err);
+
+        // Visual on-screen diagnostic box
+        el.innerHTML = `
+            <div style="border: 1px solid #ff0055; background: rgba(255,0,85,0.15); color: #ff0055; padding: 16px; margin: 10px 0; font-family: monospace; font-size: 13px; line-height: 1.5; border-radius: 4px;">
+                <strong style="color: #00ffff;">[KANSO_LOAD_ERROR]</strong> Failed to load component: <code>${relativePath}</code><br>
+                <strong>Requested URL:</strong> <code>${fullUrl}</code><br>
+                <strong>Error:</strong> ${err.message}<br>
+                ${window.location.protocol === 'file:' ? '<br><span style="color:#ffff00;">⚠️ Local file detection: Modern browsers block fetch() over <code>file:///</code>. Run a local web server (e.g., VS Code Live Server) or view on your GitHub Pages URL.</span>' : ''}
+            </div>
+        `;
         return false;
     }
 }
 
 // --- Dynamic URL Hash Routing ---
 function navigateToHash() {
-    let pageId = window.location.hash.substring(1) || 'home';
+    let rawHash = window.location.hash.replace(/^#/, '').trim();
+    let pageId = rawHash || 'home';
 
     if (!document.getElementById(pageId + '-content')) {
         pageId = 'home';
     }
-    
-    document.querySelectorAll('.page-content').forEach(section => section.classList.remove('active'));
-    document.querySelectorAll('.page-title').forEach(title => title.classList.remove('active'));
 
+    document.querySelectorAll('.page-content').forEach(section => {
+        section.classList.remove('active');
+    });
     const targetContent = document.getElementById(pageId + '-content');
-    if (targetContent) targetContent.classList.add('active');
-    
+    if (targetContent) {
+        targetContent.classList.add('active');
+    }
+
+    document.querySelectorAll('.page-title').forEach(title => {
+        title.classList.remove('active');
+    });
     const targetTitle = document.getElementById(pageId + '-title');
-    if (targetTitle) targetTitle.classList.add('active');
+    if (targetTitle) {
+        targetTitle.classList.add('active');
+    }
 }
 
 window.addEventListener('hashchange', navigateToHash);
@@ -97,8 +129,9 @@ function initMobileMenu() {
     const mainMenuBtn = document.querySelector('.main-wrapper');
 
     if (mainMenuBtn && navWrapper) {
-        mainMenuBtn.addEventListener('click', () => {
+        mainMenuBtn.addEventListener('click', (e) => {
             if (window.innerWidth <= 900) {
+                e.preventDefault();
                 navWrapper.classList.toggle('menu-open');
             }
         });
@@ -154,24 +187,28 @@ document.addEventListener('touchmove', (e) => {
     }
 }, { passive: true });
 
-// --- Safe Bootstrapping (Runs immediately if DOM is ready) ---
+// --- Orchestrated Bootstrap ---
 async function bootstrap() {
+    // 1. Load persistent navigation and header
     await Promise.all([
-        loadComponent('#slot-nav', './components/nav.html'),
-        loadComponent('#slot-header', './components/header.html')
+        loadComponent('#slot-nav', 'components/nav.html'),
+        loadComponent('#slot-header', 'components/header.html')
     ]);
 
+    // 2. Load all content sections
     const pageSlots = Array.from(document.querySelectorAll('.page-content[data-component]'));
     await Promise.all(pageSlots.map(slot => {
         const file = slot.getAttribute('data-component');
         return loadComponent(`#${slot.id}`, file);
     }));
 
+    // 3. Initialize dynamic listeners and route
     initMobileMenu();
     initTelemetryWidget();
     navigateToHash();
 }
 
+// Prevent DOMContentLoaded race condition
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', bootstrap);
 } else {
