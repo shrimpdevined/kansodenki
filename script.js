@@ -10,25 +10,23 @@ function navigateToHash() {
     document.querySelectorAll('.page-title').forEach(title => title.classList.remove('active'));
 
     const targetContent = document.getElementById(pageId + '-content');
-    if(targetContent) targetContent.classList.add('active');
+    if (targetContent) targetContent.classList.add('active');
     
     const targetTitle = document.getElementById(pageId + '-title');
-    if(targetTitle) targetTitle.classList.add('active');
+    if (targetTitle) targetTitle.classList.add('active');
 }
 
 window.addEventListener('hashchange', navigateToHash);
 window.addEventListener('DOMContentLoaded', navigateToHash);
 
 
-// --- Performance Optimized Mouse Glow Engine ---
+// --- Performance-Optimized Mouse & Touch Glow Engine ---
 let isGlowRunning = false;
 
-document.addEventListener('mousemove', (e) => {
-    // If the browser is currently drawing a frame, skip the math to prevent lag
+function updateGlowPosition(clientX, clientY) {
     if (isGlowRunning) return;
     isGlowRunning = true;
     
-    // Wait for the browser to be ready for the next visual update
     window.requestAnimationFrame(() => {
         const wrappers = document.querySelectorAll('.hex-wrapper, .proj-hex-wrapper');
         
@@ -37,9 +35,9 @@ document.addEventListener('mousemove', (e) => {
             const hexX = rect.left + rect.width / 2;
             const hexY = rect.top + rect.height / 2;
             
-            const distX = e.clientX - hexX;
-            const distY = e.clientY - hexY;
-            const distance = Math.sqrt(distX * distX + distY * distY);
+            const distX = clientX - hexX;
+            const distY = clientY - hexY;
+            const distance = Math.hypot(distX, distY);
             
             const maxDistance = 300; 
             let intensity = 0;
@@ -49,9 +47,42 @@ document.addEventListener('mousemove', (e) => {
             wrapper.style.setProperty('--glow', intensity);
         });
         
-        isGlowRunning = false; // Reset lock
+        isGlowRunning = false;
     });
+}
+
+document.addEventListener('mousemove', (e) => {
+    updateGlowPosition(e.clientX, e.clientY);
 });
+
+// Touch device handling for dynamic glow
+document.addEventListener('touchmove', (e) => {
+    if (e.touches.length > 0) {
+        updateGlowPosition(e.touches[0].clientX, e.touches[0].clientY);
+    }
+}, { passive: true });
+
+
+// --- Mobile Navigation Toggle (Ensures submenus open on iOS/Android tap) ---
+const navWrapper = document.querySelector('.nav-wrapper');
+const mainMenuBtn = document.querySelector('.main-wrapper');
+
+if (mainMenuBtn && navWrapper) {
+    mainMenuBtn.addEventListener('click', (e) => {
+        // Toggle mobile sub-menu on click/tap
+        if (window.innerWidth <= 900) {
+            navWrapper.classList.toggle('menu-open');
+        }
+    });
+
+    document.querySelectorAll('.sub-wrapper').forEach(subLink => {
+        subLink.addEventListener('click', () => {
+            if (window.innerWidth <= 900) {
+                navWrapper.classList.remove('menu-open');
+            }
+        });
+    });
+}
 
 
 // --- C.L.A.M. Core Telemetry Interactive Matrix ---
@@ -84,16 +115,13 @@ const telemetryData = {
 
 document.querySelectorAll('.comp-tab').forEach(tab => {
     tab.addEventListener('click', (e) => {
-        // Remove active class from all tabs
         document.querySelectorAll('.comp-tab').forEach(t => t.classList.remove('active'));
-        // Add active class to clicked tab
-        e.target.classList.add('active');
+        e.currentTarget.classList.add('active');
 
-        // Fetch the corresponding data
-        const board = e.target.getAttribute('data-board');
+        const board = e.currentTarget.getAttribute('data-board');
         const data = telemetryData[board];
+        if (!data) return;
 
-        // Animate the DOM elements
         document.getElementById('bar-cpu').style.width = data.cpuW;
         document.getElementById('val-cpu').innerText = data.cpuV;
 
