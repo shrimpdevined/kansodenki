@@ -8,18 +8,21 @@
     <script src="./script.js" defer></script>
 </head>
 <body>
-    <!-- Top Bar: Nav Slot and Header Title aligned side-by-side as originally positioned -->
-    <header class="top-bar">
-        <div id="slot-nav"></div>
-        <div id="slot-header"></div>
-    </header>
+    <div class="site-layout">
+        <!-- Dedicated navigation corridor for dropdowns -->
+        <aside class="sidebar-slot" id="slot-nav"></aside>
 
-    <!-- Main Content Area: Offset so the left side remains empty for the dropdown -->
-    <main class="content-area">
-        <section id="home-content" class="page-content" data-component="./components/home.html"></section>
-        <section id="products-content" class="page-content" data-component="./components/products.html"></section>
-        <section id="about-content" class="page-content" data-component="./components/about.html"></section>
-        <section id="contact-content" class="page-content" data-component="./components/contact.html"></section>
-    </main>
+        <!-- Main content column: Header and body aligned together -->
+        <div class="main-column">
+            <header class="header-slot" id="slot-header"></header>
+            
+            <main class="content-area">
+                <section id="home-content" class="page-content" data-component="./components/home.html"></section>
+                <section id="products-content" class="page-content" data-component="./components/products.html"></section>
+                <section id="about-content" class="page-content" data-component="./components/about.html"></section>
+                <section id="contact-content" class="page-content" data-component="./components/contact.html"></section>
+            </main>
+        </div>
+    </div>
 </body>
 </html>
