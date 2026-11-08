@@ -1,4 +1,17 @@
-// --- URL Hash Routing (Allows refreshing and back/forward buttons) ---
+// --- Component Loader ---
+async function loadComponent(targetSelector, fileUrl) {
+    const el = document.querySelector(targetSelector);
+    if (!el) return;
+    try {
+        const res = await fetch(fileUrl);
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        el.innerHTML = await res.responseText();
+    } catch (err) {
+        console.error(`Failed to load component ${fileUrl}:`, err);
+    }
+}
+
+// --- Dynamic URL Hash Routing ---
 function navigateToHash() {
     let pageId = window.location.hash.substring(1) || 'home';
 
@@ -17,10 +30,87 @@ function navigateToHash() {
 }
 
 window.addEventListener('hashchange', navigateToHash);
-window.addEventListener('DOMContentLoaded', navigateToHash);
 
+// --- Telemetry Data & Switcher Logic ---
+const telemetryData = {
+    pico1: { 
+        cpuW: '13%', cpuV: '133 MHz', 
+        ramW: '2%', ramV: '264 KB', 
+        effW: '100%', effV: 'EXTREME', 
+        arch: 'Cortex-M0+ (Microcontroller)' 
+    },
+    pico2: { 
+        cpuW: '15%', cpuV: '150 MHz', 
+        ramW: '5%', ramV: '520 KB', 
+        effW: '95%', effV: 'HIGH', 
+        arch: 'Cortex-M33 / RISC-V (Microcontroller)' 
+    },
+    zero1: { 
+        cpuW: '50%', cpuV: '1.0 GHz', 
+        ramW: '50%', ramV: '512 MB', 
+        effW: '60%', effV: 'MODERATE', 
+        arch: 'ARM1176JZF-S (32-bit Linux)' 
+    },
+    zero2: { 
+        cpuW: '100%', cpuV: '1.0 GHz (Quad)', 
+        ramW: '50%', ramV: '512 MB', 
+        effW: '30%', effV: 'HEAVY', 
+        arch: 'ARM Cortex-A53 (64-bit Linux)' 
+    }
+};
 
-// --- Performance-Optimized Mouse & Touch Glow Engine ---
+function initTelemetryWidget() {
+    document.querySelectorAll('.comp-tab').forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            document.querySelectorAll('.comp-tab').forEach(t => t.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+
+            const board = e.currentTarget.getAttribute('data-board');
+            const data = telemetryData[board];
+            if (!data) return;
+
+            const cpuBar = document.getElementById('bar-cpu');
+            const cpuVal = document.getElementById('val-cpu');
+            const ramBar = document.getElementById('bar-ram');
+            const ramVal = document.getElementById('val-ram');
+            const effBar = document.getElementById('bar-eff');
+            const effVal = document.getElementById('val-eff');
+            const archVal = document.getElementById('val-arch');
+
+            if (cpuBar) cpuBar.style.width = data.cpuW;
+            if (cpuVal) cpuVal.innerText = data.cpuV;
+            if (ramBar) ramBar.style.width = data.ramW;
+            if (ramVal) ramVal.innerText = data.ramV;
+            if (effBar) effBar.style.width = data.effW;
+            if (effVal) effVal.innerText = data.effV;
+            if (archVal) archVal.innerText = data.arch;
+        });
+    });
+}
+
+// --- Mobile Navigation Click/Tap Toggle ---
+function initMobileMenu() {
+    const navWrapper = document.querySelector('.nav-wrapper');
+    const mainMenuBtn = document.querySelector('.main-wrapper');
+
+    if (mainMenuBtn && navWrapper) {
+        mainMenuBtn.addEventListener('click', (e) => {
+            if (window.innerWidth <= 900) {
+                navWrapper.classList.toggle('menu-open');
+            }
+        });
+
+        document.querySelectorAll('.sub-wrapper').forEach(subLink => {
+            subLink.addEventListener('click', () => {
+                if (window.innerWidth <= 900) {
+                    navWrapper.classList.remove('menu-open');
+                }
+            });
+        });
+    }
+}
+
+// --- Mouse & Touch Glow Engine ---
 let isGlowRunning = false;
 
 function updateGlowPosition(clientX, clientY) {
@@ -55,82 +145,29 @@ document.addEventListener('mousemove', (e) => {
     updateGlowPosition(e.clientX, e.clientY);
 });
 
-// Touch device handling for dynamic glow
 document.addEventListener('touchmove', (e) => {
     if (e.touches.length > 0) {
         updateGlowPosition(e.touches[0].clientX, e.touches[0].clientY);
     }
 }, { passive: true });
 
+// --- Orchestrate Initialization ---
+document.addEventListener('DOMContentLoaded', async () => {
+    // 1. Fetch persistent structural components
+    await Promise.all([
+        loadComponent('#slot-nav', './components/nav.html'),
+        loadComponent('#slot-header', './components/header.html')
+    ]);
 
-// --- Mobile Navigation Toggle (Ensures submenus open on iOS/Android tap) ---
-const navWrapper = document.querySelector('.nav-wrapper');
-const mainMenuBtn = document.querySelector('.main-wrapper');
+    // 2. Fetch all individual page section contents
+    const pageSlots = Array.from(document.querySelectorAll('.page-content[data-component]'));
+    await Promise.all(pageSlots.map(slot => {
+        const file = slot.getAttribute('data-component');
+        return loadComponent(`#${slot.id}`, file);
+    }));
 
-if (mainMenuBtn && navWrapper) {
-    mainMenuBtn.addEventListener('click', (e) => {
-        // Toggle mobile sub-menu on click/tap
-        if (window.innerWidth <= 900) {
-            navWrapper.classList.toggle('menu-open');
-        }
-    });
-
-    document.querySelectorAll('.sub-wrapper').forEach(subLink => {
-        subLink.addEventListener('click', () => {
-            if (window.innerWidth <= 900) {
-                navWrapper.classList.remove('menu-open');
-            }
-        });
-    });
-}
-
-
-// --- C.L.A.M. Core Telemetry Interactive Matrix ---
-const telemetryData = {
-    pico1: { 
-        cpuW: '13%', cpuV: '133 MHz', 
-        ramW: '2%', ramV: '264 KB', 
-        effW: '100%', effV: 'EXTREME', 
-        arch: 'Cortex-M0+ (Microcontroller)' 
-    },
-    pico2: { 
-        cpuW: '15%', cpuV: '150 MHz', 
-        ramW: '5%', ramV: '520 KB', 
-        effW: '95%', effV: 'HIGH', 
-        arch: 'Cortex-M33 / RISC-V (Microcontroller)' 
-    },
-    zero1: { 
-        cpuW: '50%', cpuV: '1.0 GHz', 
-        ramW: '50%', ramV: '512 MB', 
-        effW: '60%', effV: 'MODERATE', 
-        arch: 'ARM1176JZF-S (32-bit Linux)' 
-    },
-    zero2: { 
-        cpuW: '100%', cpuV: '1.0 GHz (Quad)', 
-        ramW: '50%', ramV: '512 MB', 
-        effW: '30%', effV: 'HEAVY', 
-        arch: 'ARM Cortex-A53 (64-bit Linux)' 
-    }
-};
-
-document.querySelectorAll('.comp-tab').forEach(tab => {
-    tab.addEventListener('click', (e) => {
-        document.querySelectorAll('.comp-tab').forEach(t => t.classList.remove('active'));
-        e.currentTarget.classList.add('active');
-
-        const board = e.currentTarget.getAttribute('data-board');
-        const data = telemetryData[board];
-        if (!data) return;
-
-        document.getElementById('bar-cpu').style.width = data.cpuW;
-        document.getElementById('val-cpu').innerText = data.cpuV;
-
-        document.getElementById('bar-ram').style.width = data.ramW;
-        document.getElementById('val-ram').innerText = data.ramV;
-
-        document.getElementById('bar-eff').style.width = data.effW;
-        document.getElementById('val-eff').innerText = data.effV;
-
-        document.getElementById('val-arch').innerText = data.arch;
-    });
+    // 3. Initialize dynamic listeners
+    initMobileMenu();
+    initTelemetryWidget();
+    navigateToHash();
 });
