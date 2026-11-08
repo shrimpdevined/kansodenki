@@ -8,22 +8,11 @@
 
 .title-wrapper {
     position: relative;
-    top: 2px; /* 2px vertical offset for pixel-perfect alignment with the hexagon */
+    top: 2px; /* 2px vertical offset for alignment with the menu hexagon */
     display: flex;
     align-items: center;
+    background: transparent;
     overflow: visible;
-}
-
-/* CRT Scanline overlay: renders full scanlines without box-clipping glitch shadows */
-.title-wrapper::after {
-    content: "";
-    position: absolute;
-    inset: -25px -40px;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%);
-    background-size: 100% 4px;
-    pointer-events: none;
-    z-index: 20;
-    animation: screenFlicker 0.15s infinite;
 }
 
 .main-title-group {
@@ -31,11 +20,17 @@
     flex-direction: column;
     justify-content: center;
     z-index: 5;
-    background-color: #111116;
-    padding-right: 25px;
+    background: transparent;
+    /* Transparent padding buffer prevents glitch shadows from clipping at the mask edge */
+    padding: 15px 25px 15px 30px;
+    margin: -15px 0 -15px -30px;
+    -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0.45) 50%);
+    -webkit-mask-size: 100% 4px;
+    mask-image: linear-gradient(rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0.45) 50%);
+    mask-size: 100% 4px;
+    animation: screenFlicker 0.15s infinite;
 }
 
-/* Sized so the top of ja-title aligns with the top of the 113px hexagon */
 .ja-title {
     font-size: clamp(3.6rem, 7.5vw, 5.4rem);
     font-style: italic;
@@ -48,7 +43,6 @@
     animation: titleGlitch 20s infinite; 
 }
 
-/* Sized so the bottom of en-title aligns with the bottom of the 113px hexagon */
 .en-title {
     font-size: clamp(0.9rem, 1.6vw, 1.25rem);
     font-style: italic;
@@ -75,12 +69,20 @@
     transition: all 0.7s cubic-bezier(0.2, 1, 0.3, 1);
     pointer-events: none;
     white-space: nowrap;
+    background: transparent;
+    padding: 15px 30px;
+    margin: -15px 0 -15px 0;
+    -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0.45) 50%);
+    -webkit-mask-size: 100% 4px;
+    mask-image: linear-gradient(rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0.45) 50%);
+    mask-size: 100% 4px;
+    animation: screenFlicker 0.15s infinite;
 }
 
 .page-title.active {
     opacity: 1;
     left: 100%;
-    transform: translateY(-50%) translateX(0px);
+    transform: translateY(-50%) translateX(10px);
 }
 
 @keyframes titleGlitch {
