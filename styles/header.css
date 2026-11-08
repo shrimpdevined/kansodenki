@@ -4,33 +4,39 @@
     position: relative;
     z-index: 10;
     margin-bottom: 0;
-    height: 113px;
 }
 
 .title-wrapper {
     position: relative;
     display: flex;
     align-items: center;
-    height: 113px;
-    -webkit-mask-image: linear-gradient(rgba(0,0,0,1) 50%, rgba(0,0,0,0.6) 50%);
-    -webkit-mask-size: 100% 4px;
-    mask-image: linear-gradient(rgba(0,0,0,1) 50%, rgba(0,0,0,0.6) 50%);
-    mask-size: 100% 4px;
+    overflow: visible;
+}
+
+/* CRT Scanline overlay: renders full scanlines without box-clipping glitch shadows */
+.title-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: -25px -40px;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 20;
     animation: screenFlicker 0.15s infinite;
 }
 
 .main-title-group {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 113px;
+    justify-content: center;
     z-index: 5;
     background-color: #111116;
-    padding-right: 20px;
+    padding-right: 25px;
 }
 
+/* Sized so the top of ja-title aligns with the top of the 113px hexagon */
 .ja-title {
-    font-size: clamp(3rem, 6.5vw, 5.2rem);
+    font-size: clamp(3.6rem, 7.5vw, 5.4rem);
     font-style: italic;
     font-weight: 900;
     color: #ffffff;
@@ -41,18 +47,17 @@
     animation: titleGlitch 20s infinite; 
 }
 
+/* Sized so the bottom of en-title aligns with the bottom of the 113px hexagon */
 .en-title {
-    font-size: clamp(0.85rem, 1.5vw, 1.15rem);
+    font-size: clamp(0.9rem, 1.6vw, 1.25rem);
     font-style: italic;
     font-weight: 900;
     color: #ffffff;
     text-shadow: 2px 2px 0px var(--shadow-1), -2px -2px 0px var(--shadow-2);
     letter-spacing: clamp(8px, 1.4vw, 14px);
-    margin: 0 0 0 6px;
-    line-height: 0.8;
+    margin: 7px 0 0 5px;
+    line-height: 1;
     white-space: nowrap;
-    position: relative;
-    top: 6px; /* Offsets font descender space to seat baseline flush on bottom edge */
     animation: subTitleGlitch 20s infinite 0.1s; 
 }
 
@@ -60,8 +65,7 @@
     position: absolute;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 113px;
+    justify-content: center;
     top: 50%;
     left: 0;
     transform: translateY(-50%) translateX(20px);
@@ -69,6 +73,7 @@
     z-index: 1; 
     transition: all 0.7s cubic-bezier(0.2, 1, 0.3, 1);
     pointer-events: none;
+    white-space: nowrap;
 }
 
 .page-title.active {
