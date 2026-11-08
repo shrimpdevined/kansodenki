@@ -30,31 +30,22 @@ body::before {
     pointer-events: none;
 }
 
-/* --- Layout Grid: Sidebar Next to Content --- */
-.site-layout {
-    display: grid;
-    grid-template-columns: 140px minmax(0, 1fr);
-    gap: 30px;
-    padding: 40px 4vw 80px 4vw;
-    width: 100%;
-    min-height: 100vh;
-}
-
-.sidebar-slot {
-    position: relative;
+/* --- Top Bar: Restored to original location --- */
+.top-bar { 
+    display: flex; 
+    align-items: center; 
+    padding: 40px 4vw 20px 4vw; 
+    gap: 30px; 
+    position: relative; 
+    z-index: 50; 
     width: 100%;
 }
 
-.main-column {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    width: 100%;
-}
-
+/* --- Content Area: Leaves an empty margin corridor for the menu to drop down into --- */
 .content-area { 
     position: relative; 
     width: 100%;
+    padding: 0 4vw 100px 4vw;
 }
 
 .page-content {
@@ -66,6 +57,13 @@ body::before {
     font-size: 1.2rem;
     line-height: 1.6;
     width: 100%;
+}
+
+/* Desktop: Shift content over so dropdown menu hangs in empty margin space */
+@media (min-width: 901px) {
+    .content-area {
+        padding-left: calc(4vw + 160px);
+    }
 }
 
 .page-content.active {
@@ -81,11 +79,17 @@ body::before {
     100% { opacity: 0.95; } 
 }
 
-/* Responsive Fallback */
+/* Mobile & Tablet */
 @media (max-width: 900px) {
-    .site-layout {
-        grid-template-columns: 1fr;
+    .top-bar {
+        padding: 25px 4vw 15px 4vw;
+        flex-direction: column;
+        align-items: flex-start;
         gap: 20px;
-        padding: 25px 4vw 60px 4vw;
+    }
+
+    .content-area {
+        padding-left: 4vw;
+        padding-top: 15px;
     }
 }
