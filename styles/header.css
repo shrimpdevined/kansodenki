@@ -8,18 +8,44 @@
     min-height: 113px;
 }
 
+/* --- Fading Gradient Bars Behind the Logo --- */
+.header-bars {
+    position: absolute;
+    inset: -6px 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.header-bar {
+    position: absolute;
+    inset: 0;
+    border-left: 5px solid rgb(var(--bar-rgb));
+    background: linear-gradient(
+        90deg,
+        rgba(var(--bar-rgb), 0.18) 0%,
+        rgba(var(--bar-rgb), 0.06) 50%,
+        transparent 100%
+    );
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.header-bar.active {
+    opacity: 1;
+}
+
+/* --- Logo & Sliding Page Titles --- */
 .title-wrapper {
     position: relative;
     top: 2px; /* 2px vertical offset for alignment with the menu hexagon */
     display: flex;
     align-items: center;
-    width: 100%;
-    min-height: 113px;
     background: transparent;
     overflow: visible;
+    z-index: 2;
+    padding-left: 22px;
 }
 
-/* Sits in the foreground over the left side of the fading bar */
 .main-title-group {
     position: relative;
     display: flex;
@@ -27,8 +53,7 @@
     justify-content: center;
     z-index: 5;
     background: transparent;
-    padding: 0 35px 0 22px;
-    flex-shrink: 0;
+    padding-right: 30px;
 }
 
 /* Crisp HD vector text with hard-edge scanline mask applied directly to the glyphs */
@@ -93,100 +118,27 @@
     animation: subTitleGlitch 20s infinite 0.1s; 
 }
 
-/* --- Fading Header Bar & Page Banner --- */
-.page-banner {
+/* Starts tucked behind the main logo (left: 22px) and slides out to left: 100% when active */
+.page-title {
     position: absolute;
-    inset: 0;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    top: 50%;
+    left: 22px;
+    transform: translateY(-50%) translateX(0px);
     opacity: 0;
-    visibility: hidden;
-    z-index: 1;
+    z-index: 1; 
+    transition: left 0.7s cubic-bezier(0.2, 1, 0.3, 1), transform 0.7s cubic-bezier(0.2, 1, 0.3, 1), opacity 0.4s ease;
     pointer-events: none;
-    transition: opacity 0.45s ease, visibility 0.45s ease;
+    white-space: nowrap;
+    background: transparent;
 }
 
-/* Fading color bar running behind the logo and across the header */
-.page-banner::before {
-    content: "";
-    position: absolute;
-    inset: -4px 0;
-    border-left: 5px solid rgb(var(--bar-rgb));
-    background: linear-gradient(
-        90deg,
-        rgba(var(--bar-rgb), 0.22) 0%,
-        rgba(var(--bar-rgb), 0.12) 45%,
-        transparent 100%
-    );
-    z-index: -1;
-}
-
-/* Pushes the banner text cleanly to the right of the Japanese logo */
-.banner-text-group {
-    margin-left: clamp(230px, 28vw, 390px);
-    padding-left: 20px;
-    border-left: 2px solid rgba(var(--bar-rgb), 0.45);
-    transform: translateX(25px);
-    transition: transform 0.5s cubic-bezier(0.2, 1, 0.3, 1);
-}
-
-.page-banner.active {
+.page-title.active {
     opacity: 1;
-    visibility: visible;
-}
-
-.page-banner.active .banner-text-group {
-    transform: translateX(0);
-}
-
-.page-banner .cyber-title {
-    font-size: clamp(1.35rem, 2.6vw, 2.35rem);
-    font-style: italic;
-    color: #ffffff;
-    text-shadow: 2px 2px 0px var(--shadow-1), -2px -2px 0px var(--shadow-2);
-    letter-spacing: 3px;
-    line-height: 1.1;
-    margin: 0;
-}
-
-.page-banner .cyber-subtitle {
-    font-family: 'Courier New', Courier, monospace;
-    font-size: clamp(0.75rem, 1.1vw, 1rem);
-    color: rgba(255, 255, 255, 0.8);
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    margin-top: 6px;
-}
-
-/* Mobile responsive adjustments for header banner */
-@media (max-width: 900px) {
-    .title-wrapper {
-        flex-direction: column;
-        align-items: flex-start;
-        height: auto;
-    }
-
-    .main-title-group {
-        padding: 10px 20px 10px 15px;
-    }
-
-    .page-banner {
-        position: relative;
-        width: 100%;
-        display: none;
-        margin-top: 12px;
-        padding: 10px 0;
-    }
-
-    .page-banner.active {
-        display: flex;
-    }
-
-    .banner-text-group {
-        margin-left: 15px;
-        padding-left: 12px;
-        transform: none;
-    }
+    left: 100%;
+    transform: translateY(-50%) translateX(10px);
 }
 
 /* Glitch keyframes without filter:blur() so the browser maintains crisp vector font edges */
@@ -220,4 +172,12 @@
     97% { transform: translate(0, 3px); text-shadow: 1px -2px 0px var(--shadow-1), -1px 2px 0px var(--shadow-2); }
     97.5% { transform: translate(0, -2px); text-shadow: 3px 4px 0px var(--shadow-1), -3px -4px 0px var(--shadow-2); }
     98%, 100% { opacity: 1; transform: translate(0, 0); text-shadow: 2px 2px 0px var(--shadow-1), -2px -2px 0px var(--shadow-2); }
+}
+
+@media (max-width: 900px) {
+    .page-title.active {
+        left: 100%;
+        transform: translateY(-50%) translateX(0px) scale(0.85);
+        transform-origin: left center;
+    }
 }
