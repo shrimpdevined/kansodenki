@@ -21,16 +21,10 @@
     justify-content: center;
     z-index: 5;
     background: transparent;
-    /* Transparent padding buffer prevents glitch shadows from clipping at the mask edge */
-    padding: 15px 25px 15px 30px;
-    margin: -15px 0 -15px -30px;
-    -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0.45) 50%);
-    -webkit-mask-size: 100% 4px;
-    mask-image: linear-gradient(rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0.45) 50%);
-    mask-size: 100% 4px;
-    animation: screenFlicker 0.15s infinite;
+    padding-right: 25px;
 }
 
+/* Crisp HD vector text with hard-edge scanline mask applied directly to the glyphs */
 .ja-title {
     font-size: clamp(3.6rem, 7.5vw, 5.4rem);
     font-style: italic;
@@ -40,6 +34,26 @@
     letter-spacing: 5px;
     line-height: 0.95;
     margin: 0;
+    /* Padding buffer so glitch shadows never clip at the mask boundary */
+    padding: 10px 20px;
+    margin: -10px -20px;
+    -webkit-mask-image: repeating-linear-gradient(
+        to bottom,
+        #000000 0px,
+        #000000 2px,
+        rgba(0, 0, 0, 0.55) 2px,
+        rgba(0, 0, 0, 0.55) 4px
+    );
+    mask-image: repeating-linear-gradient(
+        to bottom,
+        #000000 0px,
+        #000000 2px,
+        rgba(0, 0, 0, 0.55) 2px,
+        rgba(0, 0, 0, 0.55) 4px
+    );
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: geometricPrecision;
     animation: titleGlitch 20s infinite; 
 }
 
@@ -53,46 +67,62 @@
     margin: 7px 0 0 5px;
     line-height: 1;
     white-space: nowrap;
+    padding: 6px 15px;
+    margin: 1px -15px -6px -10px;
+    -webkit-mask-image: repeating-linear-gradient(
+        to bottom,
+        #000000 0px,
+        #000000 2px,
+        rgba(0, 0, 0, 0.55) 2px,
+        rgba(0, 0, 0, 0.55) 4px
+    );
+    mask-image: repeating-linear-gradient(
+        to bottom,
+        #000000 0px,
+        #000000 2px,
+        rgba(0, 0, 0, 0.55) 2px,
+        rgba(0, 0, 0, 0.55) 4px
+    );
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: geometricPrecision;
     animation: subTitleGlitch 20s infinite 0.1s; 
 }
 
+/* Strictly hidden when inactive so it never piles up behind the transparent main logo */
 .page-title {
     position: absolute;
     display: flex;
     flex-direction: column;
     justify-content: center;
     top: 50%;
-    left: 0;
-    transform: translateY(-50%) translateX(20px);
+    left: 100%;
+    transform: translateY(-50%) translateX(-15px);
     opacity: 0;
+    visibility: hidden;
     z-index: 1; 
-    transition: all 0.7s cubic-bezier(0.2, 1, 0.3, 1);
+    transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.2, 1, 0.3, 1), visibility 0.4s;
     pointer-events: none;
     white-space: nowrap;
     background: transparent;
-    padding: 15px 30px;
-    margin: -15px 0 -15px 0;
-    -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0.45) 50%);
-    -webkit-mask-size: 100% 4px;
-    mask-image: linear-gradient(rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0.45) 50%);
-    mask-size: 100% 4px;
-    animation: screenFlicker 0.15s infinite;
 }
 
 .page-title.active {
     opacity: 1;
+    visibility: visible;
     left: 100%;
     transform: translateY(-50%) translateX(10px);
 }
 
+/* Glitch keyframes without filter:blur() so the browser maintains crisp vector font edges */
 @keyframes titleGlitch {
-    0%, 82% { opacity: 1; transform: skew(0deg); filter: blur(0px); text-shadow: 4px 4px 0px var(--shadow-1), -4px -4px 0px var(--shadow-2); }
+    0%, 82% { opacity: 1; transform: skew(0deg); text-shadow: 4px 4px 0px var(--shadow-1), -4px -4px 0px var(--shadow-2); }
     83% { transform: translate(-2px, 1px); text-shadow: 8px -2px 0px var(--shadow-1), -8px 4px 0px var(--shadow-2); }
     83.5% { transform: translate(2px, -1px); text-shadow: -4px 6px 0px var(--shadow-1), 6px -2px 0px var(--shadow-2); }
     84% { transform: translate(0, 0); text-shadow: 4px 4px 0px var(--shadow-1), -4px -4px 0px var(--shadow-2); }
-    87% { transform: skew(15deg); filter: blur(1px); text-shadow: -10px 5px 0px var(--shadow-1), 10px -5px 0px var(--shadow-2); }
-    87.5% { opacity: 0.8; transform: skew(-10deg); filter: blur(2px); text-shadow: 12px -4px 0px var(--shadow-1), -12px 6px 0px var(--shadow-2); }
-    88% { opacity: 1; transform: skew(0deg); filter: blur(0px); text-shadow: 4px 4px 0px var(--shadow-1), -4px -4px 0px var(--shadow-2); }
+    87% { transform: skew(15deg); text-shadow: -10px 5px 0px var(--shadow-1), 10px -5px 0px var(--shadow-2); }
+    87.5% { opacity: 0.85; transform: skew(-10deg); text-shadow: 12px -4px 0px var(--shadow-1), -12px 6px 0px var(--shadow-2); }
+    88% { opacity: 1; transform: skew(0deg); text-shadow: 4px 4px 0px var(--shadow-1), -4px -4px 0px var(--shadow-2); }
     92% { transform: translate(-8px, 0); text-shadow: 15px 0px 0px var(--shadow-1), -15px 0px 0px var(--shadow-2); }
     92.5% { transform: translate(8px, 0); text-shadow: -15px 0px 0px var(--shadow-1), 15px 0px 0px var(--shadow-2); }
     93% { transform: translate(0, 0); text-shadow: 4px 4px 0px var(--shadow-1), -4px -4px 0px var(--shadow-2); }
@@ -102,13 +132,13 @@
 }
 
 @keyframes subTitleGlitch {
-    0%, 82% { opacity: 1; transform: skew(0deg); filter: blur(0px); text-shadow: 2px 2px 0px var(--shadow-1), -2px -2px 0px var(--shadow-2); }
+    0%, 82% { opacity: 1; transform: skew(0deg); text-shadow: 2px 2px 0px var(--shadow-1), -2px -2px 0px var(--shadow-2); }
     83% { transform: translate(-1px, 1px); text-shadow: 4px -1px 0px var(--shadow-1), -4px 2px 0px var(--shadow-2); }
     83.5% { transform: translate(1px, -1px); text-shadow: -2px 3px 0px var(--shadow-1), 3px -1px 0px var(--shadow-2); }
     84% { transform: translate(0, 0); text-shadow: 2px 2px 0px var(--shadow-1), -2px -2px 0px var(--shadow-2); }
-    87% { transform: skew(10deg); filter: blur(1px); text-shadow: -5px 2px 0px var(--shadow-1), 5px -2px 0px var(--shadow-2); }
-    87.5% { opacity: 0.8; transform: skew(-5deg); filter: blur(1.5px); text-shadow: 6px -2px 0px var(--shadow-1), -6px 3px 0px var(--shadow-2); }
-    88% { opacity: 1; transform: skew(0deg); filter: blur(0px); text-shadow: 2px 2px 0px var(--shadow-1), -2px -2px 0px var(--shadow-2); }
+    87% { transform: skew(10deg); text-shadow: -5px 2px 0px var(--shadow-1), 5px -2px 0px var(--shadow-2); }
+    87.5% { opacity: 0.85; transform: skew(-5deg); text-shadow: 6px -2px 0px var(--shadow-1), -6px 3px 0px var(--shadow-2); }
+    88% { opacity: 1; transform: skew(0deg); text-shadow: 2px 2px 0px var(--shadow-1), -2px -2px 0px var(--shadow-2); }
     92% { transform: translate(-4px, 0); text-shadow: 8px 0px 0px var(--shadow-1), -8px 0px 0px var(--shadow-2); }
     92.5% { transform: translate(4px, 0); text-shadow: -8px 0px 0px var(--shadow-1), 8px 0px 0px var(--shadow-2); }
     93% { transform: translate(0, 0); text-shadow: 2px 2px 0px var(--shadow-1), -2px -2px 0px var(--shadow-2); }
