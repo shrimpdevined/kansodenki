@@ -1,3 +1,7 @@
+:root {
+    --subtext-offset: calc(clamp(0.7rem, 1.4vw, 0.95rem) + 8px);
+}
+
 .header-slot {
     display: flex;
     align-items: center;
@@ -18,12 +22,14 @@
 }
 
 .main-title-group {
-    position: relative;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
     z-index: 5;
     background-color: #111116;
     padding-right: 20px;
+    /* Balances the subtext below so ja-title sits dead-center */
+    padding-top: var(--subtext-offset);
 }
 
 .ja-title {
@@ -38,11 +44,7 @@
     animation: titleGlitch 20s infinite; 
 }
 
-/* Positioned beneath .ja-title without adding height to the vertical center line */
 .en-title {
-    position: absolute;
-    top: 100%;
-    left: 0;
     font-size: clamp(0.7rem, 1.4vw, 0.95rem);
     font-style: italic;
     font-weight: 900;
@@ -50,6 +52,7 @@
     text-shadow: 2px 2px 0px var(--shadow-1), -2px -2px 0px var(--shadow-2);
     letter-spacing: clamp(6px, 1.2vw, 12px);
     margin: 8px 0 0 5px;
+    line-height: 1;
     white-space: nowrap;
     animation: subTitleGlitch 20s infinite 0.1s; 
 }
@@ -57,7 +60,8 @@
 .page-title {
     position: absolute;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
     top: 50%;
     left: 0;
     transform: translateY(-50%) translateX(20px);
@@ -65,6 +69,7 @@
     z-index: 1; 
     transition: all 0.7s cubic-bezier(0.2, 1, 0.3, 1);
     pointer-events: none;
+    padding-top: var(--subtext-offset);
 }
 
 .page-title.active {
