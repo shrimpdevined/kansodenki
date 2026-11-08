@@ -30,38 +30,58 @@ body::before {
     pointer-events: none;
 }
 
-/* --- Layout Grid: Sidebar Corridor + Main Content Column --- */
+/* --- Layout Grid: Aligned Header Row + Content Row --- */
 .site-layout {
     display: grid;
     grid-template-columns: 140px minmax(0, 1fr);
-    gap: 30px;
+    grid-template-rows: auto 1fr;
+    column-gap: 30px;
+    row-gap: 35px;
     padding: 40px 4vw 80px 4vw;
     width: 100%;
     min-height: 100vh;
 }
 
+/* Unwraps children so header and content participate directly in the grid */
+.main-column {
+    display: contents;
+}
+
+/* Row 1, Column 1: Vertically centers the menu hex with the logo title */
 .sidebar-slot {
+    grid-column: 1;
+    grid-row: 1;
     position: relative;
     width: 100%;
-}
-
-.main-column {
     display: flex;
-    flex-direction: column;
-    min-width: 0;
-    width: 100%;
+    align-items: center;
 }
 
+/* Row 1, Column 2: Vertically centers the Japanese title lockup with the menu hex */
+.header-slot {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+    margin-bottom: 0;
+}
+
+/* Row 2, Column 2: Content sits below header, leaving Column 1 free for dropdowns */
 .content-area { 
+    grid-column: 2;
+    grid-row: 2;
     position: relative; 
     width: 100%;
+    min-height: 500px;
 }
 
 .page-content {
     display: none;
     opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.4s ease, transform 0.4s ease;
+    transform: translateY(15px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
     color: rgba(255, 255, 255, 0.85);
     font-size: 1.2rem;
     line-height: 1.6;
@@ -81,11 +101,31 @@ body::before {
     100% { opacity: 0.95; } 
 }
 
-/* Responsive Layout */
+/* Responsive Stacking for Mobile / Tablet */
 @media (max-width: 900px) {
     .site-layout {
         grid-template-columns: 1fr;
-        gap: 20px;
+        grid-template-rows: auto auto 1fr;
+        column-gap: 0;
+        row-gap: 20px;
         padding: 25px 4vw 60px 4vw;
+    }
+
+    .sidebar-slot {
+        grid-column: 1;
+        grid-row: 1;
+        align-items: flex-start;
+    }
+
+    .header-slot {
+        grid-column: 1;
+        grid-row: 2;
+        align-items: flex-start;
+    }
+
+    .content-area {
+        grid-column: 1;
+        grid-row: 3;
+        min-height: auto;
     }
 }
