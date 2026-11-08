@@ -4,6 +4,8 @@
     position: relative;
     z-index: 10;
     margin-bottom: 0;
+    width: 100%;
+    min-height: 113px;
 }
 
 .title-wrapper {
@@ -11,17 +13,22 @@
     top: 2px; /* 2px vertical offset for alignment with the menu hexagon */
     display: flex;
     align-items: center;
+    width: 100%;
+    min-height: 113px;
     background: transparent;
     overflow: visible;
 }
 
+/* Sits in the foreground over the left side of the fading bar */
 .main-title-group {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     z-index: 5;
     background: transparent;
-    padding-right: 25px;
+    padding: 0 35px 0 22px;
+    flex-shrink: 0;
 }
 
 /* Crisp HD vector text with hard-edge scanline mask applied directly to the glyphs */
@@ -33,8 +40,6 @@
     text-shadow: 4px 4px 0px var(--shadow-1), -4px -4px 0px var(--shadow-2);
     letter-spacing: 5px;
     line-height: 0.95;
-    margin: 0;
-    /* Padding buffer so glitch shadows never clip at the mask boundary */
     padding: 10px 20px;
     margin: -10px -20px;
     -webkit-mask-image: repeating-linear-gradient(
@@ -64,7 +69,6 @@
     color: #ffffff;
     text-shadow: 2px 2px 0px var(--shadow-1), -2px -2px 0px var(--shadow-2);
     letter-spacing: clamp(8px, 1.4vw, 14px);
-    margin: 7px 0 0 5px;
     line-height: 1;
     white-space: nowrap;
     padding: 6px 15px;
@@ -89,29 +93,100 @@
     animation: subTitleGlitch 20s infinite 0.1s; 
 }
 
-/* Strictly hidden when inactive so it never piles up behind the transparent main logo */
-.page-title {
+/* --- Fading Header Bar & Page Banner --- */
+.page-banner {
     position: absolute;
+    inset: 0;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    top: 50%;
-    left: 100%;
-    transform: translateY(-50%) translateX(-15px);
+    align-items: center;
     opacity: 0;
     visibility: hidden;
-    z-index: 1; 
-    transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.2, 1, 0.3, 1), visibility 0.4s;
+    z-index: 1;
     pointer-events: none;
-    white-space: nowrap;
-    background: transparent;
+    transition: opacity 0.45s ease, visibility 0.45s ease;
 }
 
-.page-title.active {
+/* Fading color bar running behind the logo and across the header */
+.page-banner::before {
+    content: "";
+    position: absolute;
+    inset: -4px 0;
+    border-left: 5px solid rgb(var(--bar-rgb));
+    background: linear-gradient(
+        90deg,
+        rgba(var(--bar-rgb), 0.22) 0%,
+        rgba(var(--bar-rgb), 0.12) 45%,
+        transparent 100%
+    );
+    z-index: -1;
+}
+
+/* Pushes the banner text cleanly to the right of the Japanese logo */
+.banner-text-group {
+    margin-left: clamp(230px, 28vw, 390px);
+    padding-left: 20px;
+    border-left: 2px solid rgba(var(--bar-rgb), 0.45);
+    transform: translateX(25px);
+    transition: transform 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+.page-banner.active {
     opacity: 1;
     visibility: visible;
-    left: 100%;
-    transform: translateY(-50%) translateX(10px);
+}
+
+.page-banner.active .banner-text-group {
+    transform: translateX(0);
+}
+
+.page-banner .cyber-title {
+    font-size: clamp(1.35rem, 2.6vw, 2.35rem);
+    font-style: italic;
+    color: #ffffff;
+    text-shadow: 2px 2px 0px var(--shadow-1), -2px -2px 0px var(--shadow-2);
+    letter-spacing: 3px;
+    line-height: 1.1;
+    margin: 0;
+}
+
+.page-banner .cyber-subtitle {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: clamp(0.75rem, 1.1vw, 1rem);
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 6px;
+}
+
+/* Mobile responsive adjustments for header banner */
+@media (max-width: 900px) {
+    .title-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+        height: auto;
+    }
+
+    .main-title-group {
+        padding: 10px 20px 10px 15px;
+    }
+
+    .page-banner {
+        position: relative;
+        width: 100%;
+        display: none;
+        margin-top: 12px;
+        padding: 10px 0;
+    }
+
+    .page-banner.active {
+        display: flex;
+    }
+
+    .banner-text-group {
+        margin-left: 15px;
+        padding-left: 12px;
+        transform: none;
+    }
 }
 
 /* Glitch keyframes without filter:blur() so the browser maintains crisp vector font edges */
