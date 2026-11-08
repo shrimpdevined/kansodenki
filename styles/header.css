@@ -8,6 +8,7 @@
 
 .title-wrapper {
     position: relative;
+    top: 2px; /* 2px vertical offset for pixel-perfect alignment with the hexagon */
     display: flex;
     align-items: center;
     overflow: visible;
